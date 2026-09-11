@@ -6,7 +6,7 @@
   font-display: block;
 }
 
-:root { color-scheme: light; background: #e5e5e2; color: #eaff00; }
+:root { color-scheme: light; background: #eaff00; color: #111111; }
 * { box-sizing: border-box; }
 html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
 body { font-family: Terminal, monospace; }

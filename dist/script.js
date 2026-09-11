@@ -1,9 +1,10 @@
-/* The figure is a moving surface of type. No model, video or external runtime. */
+/* An articulated mosaic of type, numbers, symbols and pixel patterns. */
 (() => {
   'use strict';
 
   const TAU = Math.PI * 2;
-  const INK = [234, 255, 0];
+  const INK = '#111111';
+  const DATA = '0123456789<>[]{}()/\\+=_*:;.,!?|#%@$';
   const COPY = [
     'BIFROST',
     'THE NEXT MOVE IS PHYSICAL.',
@@ -139,30 +140,58 @@
   }
 
   function createGlyphAtlas(makeCanvas, fontSize = 20) {
-    const characters = [...new Set([...COPY, ...CHEST].join(''))].filter(c => c !== ' ');
+    const characters = [...new Set([...COPY, ...CHEST, DATA].join(''))].filter(c => c !== ' ');
     const cellWidth = Math.ceil(fontSize * .8), cellHeight = Math.ceil(fontSize * 1.2);
     const atlas = makeCanvas(cellWidth * 16, Math.ceil(characters.length / 16) * cellHeight);
     const brush = atlas.getContext('2d');
     const glyphs = {};
     brush.font = `${fontSize}px Terminal`;
-    brush.fillStyle = '#eaff00';
-    brush.strokeStyle = '#171717';
-    brush.lineWidth = 4;
+    brush.fillStyle = INK;
+    brush.strokeStyle = INK;
+    brush.lineWidth = .6;
     brush.lineJoin = 'round';
     brush.textAlign = 'center';
     brush.textBaseline = 'middle';
     characters.forEach((character, index) => {
       const x = index % 16 * cellWidth, y = Math.floor(index / 16) * cellHeight;
-      brush.strokeStyle = '#171717';
-      brush.lineWidth = 4;
-      brush.strokeText(character, x + cellWidth / 2, y + cellHeight / 2);
-      brush.strokeStyle = '#eaff00';
-      brush.lineWidth = 1.05;
       brush.strokeText(character, x + cellWidth / 2, y + cellHeight / 2);
       brush.fillText(character, x + cellWidth / 2, y + cellHeight / 2);
       glyphs[character] = [x, y];
     });
     return { atlas, glyphs, fontSize, cellWidth, cellHeight };
+  }
+
+  function drawGlyph(ctx, char, size, type) {
+    if (type) {
+      const glyph = type.glyphs[char];
+      const w = type.cellWidth / type.fontSize * size, h = type.cellHeight / type.fontSize * size;
+      ctx.drawImage(type.atlas, glyph[0], glyph[1], type.cellWidth, type.cellHeight, -w / 2, -h / 2, w, h);
+    } else {
+      ctx.font = `${size}px Terminal`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(char, 0, 0);
+    }
+  }
+
+  function drawDataTile(ctx, kind, char, width, height, size, type, column, row) {
+    const x = -width / 2, y = -height / 2;
+    if (kind < 3) {
+      ctx.fillRect(x, y, width * 1.03, height * 1.03);
+    } else if (kind < 5) {
+      const step = size * .2;
+      for (let r = 0; r < height / step; r++) {
+        for (let c = 0; c < width / step; c++) {
+          if ((r + c) % 2 === 0 || kind === 4) ctx.fillRect(x + c * step, y + r * step, step * .5, step * .5);
+        }
+      }
+    } else if (kind === 5) {
+      for (let stripe = y; stripe < y + height; stripe += size * .22) ctx.fillRect(x, stripe, width, size * .075);
+    } else if (kind === 8) {
+      if (column % 3 === 1 && row % 3 === 1) drawGlyph(ctx, char, size * 2.2, type);
+    } else {
+      drawGlyph(ctx, char, size, type);
+    }
   }
 
   function drawPart(ctx, part, screen, scale, type) {
@@ -193,6 +222,7 @@
       const text = part.name === 'torso' ? CHEST[row % CHEST.length] : COPY[(row + part.offset) % COPY.length];
       const line = text + '  ';
       const front = -Math.atan2(sy, cy);
+      const copyRow = (part.name === 'torso' && [1, 5, 9, 13].includes(row)) || (part.name === 'head' && row === 1);
 
       for (let i = 0; i < nChars; i++) {
         // Centre each sentence on the visible face; the remaining type wraps around the volume.
@@ -202,33 +232,18 @@
         const light = camera(normal)[2];
         if (light < .12) continue;
         const charIndex = ((index + Math.floor(text.length / 2)) % line.length + line.length) % line.length;
-        const char = line[charIndex];
-        if (char === ' ') continue;
+        const patch = (Math.imul(Math.floor(i / 3) + 1, 73856093) ^ Math.imul(Math.floor(row / 3) + 1, 19349663) ^ Math.imul(part.offset + part.name.length, 83492791)) >>> 0;
+        const kind = patch % 10;
+        const char = copyRow ? line[charIndex] : kind === 6 ? String((i + row + part.offset) % 10) : DATA[(patch + i + row * 7) % DATA.length];
+        if (copyRow && char === ' ') continue;
         const point = screen(surfacePoint(part, t, angle, radii));
         const tangent = camera(unit(add(mul(part.u, Math.cos(angle) * radii[0]), mul(part.v, -Math.sin(angle) * radii[1]))));
-        const brightness = .8 + .2 * Math.pow(light, .7);
         ctx.save();
         ctx.translate(point[0], point[1]);
         ctx.transform(tangent[0], tangent[1], cameraDown[0], cameraDown[1], 0, 0);
-        if (type) {
-          const glyph = type.glyphs[char];
-          const s = size * scale;
-          ctx.globalAlpha = brightness;
-          const w = type.cellWidth / type.fontSize * s, h = type.cellHeight / type.fontSize * s;
-          ctx.drawImage(type.atlas, glyph[0], glyph[1], type.cellWidth, type.cellHeight, -w / 2, -h / 2, w, h);
-        } else {
-          ctx.fillStyle = `rgb(${INK.map(v => Math.round(v * brightness)).join(',')})`;
-          ctx.font = `${size * scale}px Terminal`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.strokeStyle = '#171717';
-          ctx.lineWidth = size * scale * .2;
-          ctx.strokeText(char, 0, 0);
-          ctx.strokeStyle = ctx.fillStyle;
-          ctx.lineWidth = size * scale * .0525;
-          ctx.strokeText(char, 0, 0);
-          ctx.fillText(char, 0, 0);
-        }
+        ctx.fillStyle = INK;
+        if (copyRow) drawGlyph(ctx, char, size * scale, type);
+        else drawDataTile(ctx, kind, char, circumference / nChars * scale, length(sub(part.b, part.a)) / nRows * scale, size * scale, type, i, row);
         ctx.restore();
       }
     }
