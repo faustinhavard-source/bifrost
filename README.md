@@ -24,4 +24,10 @@ Contact links open the visitor's email application with the QIAO subject. They d
 
 ## Deployment
 
-Vercel serves the static `dist/` directory directly, without a build command or package installation. The production branch is `main`.
+Vercel serves the static `dist/` directory directly, without a build command or package installation.
+
+- Public website: https://qiao-nine.vercel.app
+- GitHub repository: https://github.com/faustinhavard-source/qiao (private; source branch `main`).
+- Vercel project: https://vercel.com/joinef/qiao
+
+The initial production deployment was uploaded from these exact site assets. Automatic deployment from GitHub is not connected yet. To enable it, connect `faustinhavard-source/qiao` in the project's Git settings and use `main` as the production branch: https://vercel.com/joinef/qiao/settings/git .
