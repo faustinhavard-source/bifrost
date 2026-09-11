@@ -14,13 +14,17 @@ The site is authored directly in `dist/`. It requires no compilation and no exte
 
 ## Typography
 
-The reference uses **New Mercat**, by Toormix: https://toormix.com/ca/projecte/new-mercat . No New Mercat font file or licence was supplied. This first version uses **VT323** by Peter Hull with a horizontal scanline treatment, as a visual approximation. VT323 is distributed under the SIL Open Font License; the licence is included in `dist/assets/FONT-LICENSE.txt`.
+The reference uses **New Mercat**, by Toormix: https://toormix.com/ca/projecte/new-mercat . No New Mercat font file or licence was supplied. The site uses **VT323** by Peter Hull, preserving the pixel terminal style. VT323 is distributed under the SIL Open Font License; the licence is included in `dist/assets/FONT-LICENSE.txt`.
 
-To use the exact reference typeface, supply a properly licensed New Mercat webfont and replace the `Terminal` font-face declaration in `dist/styles.css`, then check headline widths again.
+To use the exact reference typeface, supply a properly licensed New Mercat webfont and replace the `Terminal` font-face declaration in `dist/styles.css`, then check the character spacing on the figure.
 
 ## Behaviour
 
-Contact links open the visitor's email application with the QIAO subject. They do not send anything automatically. The original acid-yellow poster is preserved as a single viewport-sized page, with compact arrangements for mobile and short screens. The Shenzhen clock uses the Asia/Shanghai time zone. Reduced-motion preferences disable animated accents.
+The page is a black viewport with one centred humanoid made entirely of the programme's wording, in the original acid yellow (#ddff4b). A small Canvas 2D renderer projects text onto articulated body surfaces. The figure walks in place in a 2.8-second loop, rendered at up to 30 frames per second. There are no external runtime dependencies, navigation, contact buttons or scrolling.
+
+Click or tap to pause and resume; the same control works with Enter or Space. Reduced-motion preferences start with a still pose. Animation stops while the page is hidden. Programme information is also available as semantic text to screen readers. A rendered still in `dist/assets/humanoid.png` displays while the local font loads, or if JavaScript is unavailable.
+
+The renderer exports `drawFrame` under Node for generating the fallback with the same geometry and for checking poses without a browser. Regenerate the still whenever the geometry, typography or copy changes.
 
 The rejected dark visual direction is no longer used on the website. Its source artwork remains archived in `design/`.
 
