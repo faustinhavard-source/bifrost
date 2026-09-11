@@ -20,11 +20,11 @@ To use the exact reference typeface, supply a properly licensed New Mercat webfo
 
 ## Behaviour
 
-The page is a black viewport with one centred humanoid made entirely of the programme's wording, in the original acid yellow (#ddff4b). A small Canvas 2D renderer projects text onto articulated body surfaces. The figure walks in place in a 2.8-second loop, rendered at up to 30 frames per second. There are no external runtime dependencies, navigation, contact buttons or scrolling.
+The page is a single viewport with a black-and-white halftone poster and oversized lettering: THE NEXT MOVE IS PHYSICAL. The programme route, dates and organisers sit at its edges. A fluorescent yellow (#eaff00) humanoid made of the programme's words walks in front of the poster, on a transparent canvas. Fine black outlines keep its letters readable over both the paper texture and black headlines. A small Canvas 2D renderer projects text onto articulated body surfaces. The walk loops every 2.8 seconds at up to 30 frames per second. There are no external runtime dependencies, navigation, contact buttons or scrolling.
 
-Click or tap to pause and resume; the same control works with Enter or Space. Reduced-motion preferences start with a still pose. Animation stops while the page is hidden. Programme information is also available as semantic text to screen readers. A rendered still in `dist/assets/humanoid.png` displays while the local font loads, or if JavaScript is unavailable.
+Click or tap to pause and resume; the same control works with Enter or Space. Reduced-motion preferences start with a still pose. Animation stops while the page is hidden. Programme information is also available as semantic text to screen readers. A transparent rendered still in `dist/assets/humanoid.webp` displays over the poster while the local font loads, or if JavaScript is unavailable. Separate wide and tall SVG posters preserve the composition on mobile.
 
-The renderer exports `drawFrame` under Node for generating the fallback with the same geometry and for checking poses without a browser. Regenerate the still whenever the geometry, typography or copy changes.
+The renderer exports `drawFrame` under Node for generating the fallback with the same geometry and for checking poses without a browser. `design/build-poster.cjs` generates the outlined SVG posters, transparent humanoid and social preview with `@napi-rs/canvas`. The display lettering is outlined Arial, with no font dependency in the shipped SVG. `QIAO_POSTER_FONT` can supply another licensed font for regeneration. Regenerate these assets whenever geometry, typography or copy changes.
 
 The rejected dark visual direction is no longer used on the website. Its source artwork remains archived in `design/`.
 

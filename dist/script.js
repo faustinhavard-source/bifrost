@@ -3,7 +3,7 @@
   'use strict';
 
   const TAU = Math.PI * 2;
-  const INK = [221, 255, 75];
+  const INK = [234, 255, 0];
   const COPY = [
     'QIAO',
     'THE NEXT MOVE IS PHYSICAL.',
@@ -145,11 +145,20 @@
     const brush = atlas.getContext('2d');
     const glyphs = {};
     brush.font = `${fontSize}px Terminal`;
-    brush.fillStyle = '#ddff4b';
+    brush.fillStyle = '#eaff00';
+    brush.strokeStyle = '#171717';
+    brush.lineWidth = 4;
+    brush.lineJoin = 'round';
     brush.textAlign = 'center';
     brush.textBaseline = 'middle';
     characters.forEach((character, index) => {
       const x = index % 16 * cellWidth, y = Math.floor(index / 16) * cellHeight;
+      brush.strokeStyle = '#171717';
+      brush.lineWidth = 4;
+      brush.strokeText(character, x + cellWidth / 2, y + cellHeight / 2);
+      brush.strokeStyle = '#eaff00';
+      brush.lineWidth = 1.05;
+      brush.strokeText(character, x + cellWidth / 2, y + cellHeight / 2);
       brush.fillText(character, x + cellWidth / 2, y + cellHeight / 2);
       glyphs[character] = [x, y];
     });
@@ -165,8 +174,11 @@
     ctx.beginPath();
     boundary.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
     ctx.closePath();
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
     ctx.fillStyle = '#000';
     ctx.fill();
+    ctx.restore();
 
     const size = part.name === 'head' ? 9.2 : part.name === 'foot' ? 8 : 10;
     const rowHeight = part.name === 'head' ? 7.7 : part.name === 'foot' ? 5 : 8.5;
@@ -194,7 +206,7 @@
         if (char === ' ') continue;
         const point = screen(surfacePoint(part, t, angle, radii));
         const tangent = camera(unit(add(mul(part.u, Math.cos(angle) * radii[0]), mul(part.v, -Math.sin(angle) * radii[1]))));
-        const brightness = .36 + .64 * Math.pow(light, .7);
+        const brightness = .8 + .2 * Math.pow(light, .7);
         ctx.save();
         ctx.translate(point[0], point[1]);
         ctx.transform(tangent[0], tangent[1], cameraDown[0], cameraDown[1], 0, 0);
@@ -209,6 +221,12 @@
           ctx.font = `${size * scale}px Terminal`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
+          ctx.strokeStyle = '#171717';
+          ctx.lineWidth = size * scale * .2;
+          ctx.strokeText(char, 0, 0);
+          ctx.strokeStyle = ctx.fillStyle;
+          ctx.lineWidth = size * scale * .0525;
+          ctx.strokeText(char, 0, 0);
           ctx.fillText(char, 0, 0);
         }
         ctx.restore();
@@ -217,9 +235,8 @@
   }
 
   function drawFrame(ctx, width, height, milliseconds = 0, type) {
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, width, height);
-    const scale = Math.min(width / 365, height / 760);
+    ctx.clearRect(0, 0, width, height);
+    const scale = Math.min(width / 355, height / 665);
     const screen = p => {
       const q = camera(p);
       return [width / 2 + (q[0] - 6) * scale, height / 2 + (q[1] - 2) * scale];
@@ -234,7 +251,7 @@
 
   const figure = document.querySelector('.figure');
   const canvas = figure.querySelector('canvas');
-  const ctx = canvas.getContext('2d', { alpha: false });
+  const ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) return;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let paused = reducedMotion.matches;
