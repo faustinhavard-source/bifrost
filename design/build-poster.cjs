@@ -10,7 +10,7 @@ const { drawFrame, createGlyphAtlas } = require('../dist/script.js');
 GlobalFonts.registerFromPath(process.env.BIFROST_POSTER_FONT || '/System/Library/Fonts/Supplemental/Arial.ttf', 'Poster');
 GlobalFonts.registerFromPath(path.join(assets, 'vt323.ttf'), 'Terminal');
 
-const paper = '<rect width="100%" height="100%" fill="#e8ce6a"/>';
+const paper = '<rect width="100%" height="100%" fill="#C0FF33"/>';
 
 function makePoster(w, h, tall) {
   const canvas = createCanvas(w, h, SvgExportFlag.ConvertTextToPaths);
