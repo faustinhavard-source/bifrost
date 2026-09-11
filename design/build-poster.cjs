@@ -53,10 +53,8 @@ function makePoster(w, h, tall) {
     word('THE NEXT', -24, 88, 1488, 230);
     word('MOVE IS', 102, 368, 1400, 230);
     word('PHYSICAL', -43, 652, 1525, 245);
-    caption('STARTING WITH 1 WEEK IN ZURICH,', 24, 940, 24);
-    caption('THEN 2 WEEKS IN SHENZHEN.', 24, 975, 24);
-    caption('THE BRIDGE', w - 24, 940, 24, 'right');
-    caption('× PLUTO HOUSE', w - 24, 975, 24, 'right');
+    caption('STARTING WITH 1 WEEK IN ZURICH, THEN 2 WEEKS IN SHENZHEN.', 24, 975, 24);
+    caption('THE BRIDGE × PLUTO HOUSE', w - 24, 975, 24, 'right');
   }
   return canvas.getContent().toString().replace(/(<svg[^>]*>)/, `$1${paper}`);
 }
