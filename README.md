@@ -20,9 +20,9 @@ To use the exact reference typeface, supply a properly licensed New Mercat webfo
 
 ## Behaviour
 
-Contact links open the visitor's email application with the QIAO subject. They do not send anything automatically. The page uses a viewport-sized layout, with compact arrangements for mobile and short screens. Reduced-motion preferences disable hover transitions. No JavaScript is required.
+Contact links open the visitor's email application with the QIAO subject. They do not send anything automatically. The original acid-yellow poster is preserved as a single viewport-sized page, with compact arrangements for mobile and short screens. The Shenzhen clock uses the Asia/Shanghai time zone. Reduced-motion preferences disable animated accents.
 
-The hero uses illustrative robotic-hand artwork generated with the built-in Imagegen tool. The source image, provenance and complete prompt are preserved in `design/ASSET-NOTES.md`. The website serves an optimized JPEG.
+The rejected dark visual direction is no longer used on the website. Its source artwork remains archived in `design/`.
 
 ## Deployment
 
