@@ -5,7 +5,7 @@ A single-screen English landing page for the Zurich-to-Shenzhen robotics program
 - Programme name: BIFROST.
 - Source: https://app.notion.com/p/entrepreneursfirst/Partner-Brief-Zurich-to-Shenzhen-3d7e26adb8c9818d9686f1f9edda90aa
 - Contact destination, explicitly supplied by the user: automations-thebridge@joinef.com.
-- Current copy, updated at the user's request: BIFROST Robotics Program; the 45 builders; starting with 1 week in Zurich, then 2 weeks in Shenzhen; Entrepreneurs First × The Bridge. This supersedes the dates and partner wording in the original brief.
+- Current copy, updated at the user's request: BIFROST Robotics Program; 45 robotics founders; starting with 1 week in Zurich, then 2 weeks in Shenzhen; The Bridge × Pluto House. This supersedes the dates and partner wording in the original brief.
 - Prices, unsupported superlatives, previous-cohort performance, availability claims and Chinese New Year references have intentionally been left out of this concise first page.
 
 ## Files
@@ -20,7 +20,7 @@ To use the exact reference typeface, supply a properly licensed New Mercat webfo
 
 ## Behaviour
 
-The page is a single viewport with a solid fluorescent yellow (#eaff00) background and oversized white lettering: THE NEXT MOVE IS PHYSICAL. Larger black captions at the edges show the programme name, 45 builders, itinerary and organisers. A black humanoid with individual fingers and level soles walks in front of the poster, on a transparent canvas. Its surface mixes programme words, numbers, symbols, solid pixel panels, stripes and dot patterns. A small Canvas 2D renderer projects this mosaic onto articulated body surfaces. The walk loops every 2.8 seconds at up to 30 frames per second. There are no external runtime dependencies, navigation, contact buttons or scrolling.
+The page is a single viewport with a soft warm yellow (#e8ce6a) background and oversized white lettering: THE NEXT MOVE IS PHYSICAL. Larger black captions at the edges show the programme name, 45 robotics founders, itinerary and organisers. A black humanoid with individual fingers and level soles walks in front of the poster, on a transparent canvas. Its surface mixes programme words, numbers, symbols, solid pixel panels, stripes and dot patterns. A small Canvas 2D renderer projects this mosaic onto articulated body surfaces. The walk loops every 2.8 seconds at up to 30 frames per second. There are no external runtime dependencies, navigation, contact buttons or scrolling.
 
 Click or tap to pause and resume; the same control works with Enter or Space. Reduced-motion preferences start with a still pose. Animation stops while the page is hidden. Programme information is also available as semantic text to screen readers. A transparent rendered still in `dist/assets/humanoid.webp` displays over the poster while the local font loads, or if JavaScript is unavailable. Separate wide and tall SVG posters preserve the composition on mobile.
 

@@ -10,7 +10,7 @@ const { drawFrame, createGlyphAtlas } = require('../dist/script.js');
 GlobalFonts.registerFromPath(process.env.BIFROST_POSTER_FONT || '/System/Library/Fonts/Supplemental/Arial.ttf', 'Poster');
 GlobalFonts.registerFromPath(path.join(assets, 'vt323.ttf'), 'Terminal');
 
-const paper = '<rect width="100%" height="100%" fill="#eaff00"/>';
+const paper = '<rect width="100%" height="100%" fill="#e8ce6a"/>';
 
 function makePoster(w, h, tall) {
   const canvas = createCanvas(w, h, SvgExportFlag.ConvertTextToPaths);
@@ -38,25 +38,25 @@ function makePoster(w, h, tall) {
   if (tall) {
     caption('BIFROST', 15, 28, 28);
     caption('ROBOTICS PROGRAM', 15, 51, 23);
-    caption('THE 45', w - 15, 28, 25, 'right');
-    caption('BUILDERS', w - 15, 51, 23, 'right');
+    caption('45 ROBOTICS', w - 15, 28, 25, 'right');
+    caption('FOUNDERS', w - 15, 51, 23, 'right');
     word('THE', -14, 73, 418, 126);
     word('NEXT', 12, 244, 400, 126);
     word('MOVE IS', -17, 414, 423, 118);
     word('PHYSICAL', -12, 576, 414, 126);
     caption('STARTING WITH 1 WEEK IN ZURICH,', 15, 756, 23);
     caption('THEN 2 WEEKS IN SHENZHEN.', 15, 781, 23);
-    caption('ENTREPRENEURS FIRST × THE BRIDGE', 15, 825, 23);
+    caption('THE BRIDGE × PLUTO HOUSE', 15, 825, 23);
   } else {
     caption('BIFROST ROBOTICS PROGRAM', 24, 43, 34);
-    caption('THE 45 BUILDERS', w - 24, 43, 34, 'right');
+    caption('45 ROBOTICS FOUNDERS', w - 24, 43, 34, 'right');
     word('THE NEXT', -24, 88, 1488, 230);
     word('MOVE IS', 102, 368, 1400, 230);
     word('PHYSICAL', -43, 652, 1525, 245);
     caption('STARTING WITH 1 WEEK IN ZURICH,', 24, 940, 30);
     caption('THEN 2 WEEKS IN SHENZHEN.', 24, 975, 30);
-    caption('ENTREPRENEURS FIRST', w - 24, 940, 30, 'right');
-    caption('× THE BRIDGE', w - 24, 975, 30, 'right');
+    caption('THE BRIDGE', w - 24, 940, 30, 'right');
+    caption('× PLUTO HOUSE', w - 24, 975, 30, 'right');
   }
   return canvas.getContent().toString().replace(/(<svg[^>]*>)/, `$1${paper}`);
 }
