@@ -36,4 +36,4 @@ Vercel serves the static `dist/` directory directly, without a build command or 
 - GitHub repository: https://github.com/faustinhavard-source/qiao (private; source branch `main`).
 - Vercel project: https://vercel.com/joinef/qiao
 
-The initial production deployment was uploaded from these exact site assets. Automatic deployment from GitHub is not connected yet. To enable it, connect `faustinhavard-source/qiao` in the project's Git settings and use `main` as the production branch: https://vercel.com/joinef/qiao/settings/git .
+The project is connected to `faustinhavard-source/qiao` through Vercel's Git integration. Push reviewed changes to `main` to publish the static `dist/` directory. Check the resulting deployment and public URL after each push. Git connection settings: https://vercel.com/joinef/qiao/settings/git .
