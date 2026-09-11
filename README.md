@@ -1,8 +1,8 @@
-# QIAO — robotics founders programme
+# BIFROST — robotics founders programme
 
 A single-screen English landing page for the Zurich-to-Shenzhen robotics programme, based on the Partner Brief supplied on 11 September 2026.
 
-- Provisional name: QIAO.
+- Programme name: BIFROST.
 - Source: https://app.notion.com/p/entrepreneursfirst/Partner-Brief-Zurich-to-Shenzhen-3d7e26adb8c9818d9686f1f9edda90aa
 - Contact destination, explicitly supplied by the user: automations-thebridge@joinef.com.
 - Content: 45 European robotics builders; Zurich, 7–18 December 2026; Shenzhen, 25 January–4 February 2027; Entrepreneurs First and Pluto House.
@@ -24,7 +24,7 @@ The page is a single viewport with a black-and-white halftone poster and oversiz
 
 Click or tap to pause and resume; the same control works with Enter or Space. Reduced-motion preferences start with a still pose. Animation stops while the page is hidden. Programme information is also available as semantic text to screen readers. A transparent rendered still in `dist/assets/humanoid.webp` displays over the poster while the local font loads, or if JavaScript is unavailable. Separate wide and tall SVG posters preserve the composition on mobile.
 
-The renderer exports `drawFrame` under Node for generating the fallback with the same geometry and for checking poses without a browser. `design/build-poster.cjs` generates the outlined SVG posters, transparent humanoid and social preview with `@napi-rs/canvas`. The display lettering is outlined Arial, with no font dependency in the shipped SVG. `QIAO_POSTER_FONT` can supply another licensed font for regeneration. Regenerate these assets whenever geometry, typography or copy changes.
+The renderer exports `drawFrame` under Node for generating the fallback with the same geometry and for checking poses without a browser. `design/build-poster.cjs` generates the outlined SVG posters, transparent humanoid and social preview with `@napi-rs/canvas`. The display lettering is outlined Arial, with no font dependency in the shipped SVG. `BIFROST_POSTER_FONT` can supply another licensed font for regeneration. Regenerate these assets whenever geometry, typography or copy changes.
 
 The rejected dark visual direction is no longer used on the website. Its source artwork remains archived in `design/`.
 

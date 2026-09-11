@@ -1,5 +1,5 @@
 // Generate the outlined poster artwork and stills from the site's own renderer.
-// Requires @napi-rs/canvas. QIAO_POSTER_FONT can point to an alternative licensed font.
+// Requires @napi-rs/canvas. BIFROST_POSTER_FONT can point to an alternative licensed font.
 const { createCanvas, GlobalFonts, SvgExportFlag, loadImage } = require('@napi-rs/canvas');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, '..');
 const assets = path.join(root, 'dist/assets');
 const { drawFrame, createGlyphAtlas } = require('../dist/script.js');
 
-GlobalFonts.registerFromPath(process.env.QIAO_POSTER_FONT || '/System/Library/Fonts/Supplemental/Arial.ttf', 'Poster');
+GlobalFonts.registerFromPath(process.env.BIFROST_POSTER_FONT || '/System/Library/Fonts/Supplemental/Arial.ttf', 'Poster');
 GlobalFonts.registerFromPath(path.join(assets, 'vt323.ttf'), 'Terminal');
 
 const dots = `<defs><pattern id="print" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(19)"><g fill="#191919"><path d="M3 1.05 4.46 1.7 4.94 3.16 4.02 4.52 2.55 4.85 1.12 3.8 1.29 2.2Z"/><path d="M9 1.3 10.7 2.08 10.86 3.5 9.8 4.85 8.25 4.6 7.1 3.36 7.48 1.8Z"/><path d="M3 7.13 4.52 7.7 4.82 9.2 3.88 10.58 2.28 10.71 1.02 9.4 1.42 7.8Z"/><path d="M9 7.08 10.65 7.85 10.91 9.4 9.65 10.93 8.1 10.61 7.04 9.16 7.64 7.6Z"/></g></pattern></defs><rect width="100%" height="100%" fill="#e5e5e2"/><rect width="100%" height="100%" fill="url(#print)"/>`;
@@ -39,7 +39,7 @@ function makePoster(w, h, tall) {
   }
 
   if (tall) {
-    caption('QIAO / ROBOTICS', 15, 25, 17);
+    caption('BIFROST / ROBOTICS', 15, 25, 17);
     caption('45 BUILDERS', w - 15, 25, 17, 'right');
     word('THE', -14, 73, 418, 126);
     word('NEXT', 12, 244, 400, 126);
@@ -49,7 +49,7 @@ function makePoster(w, h, tall) {
     caption('07–18 DEC 2026 / 25 JAN–04 FEB 2027', 15, 787, 16);
     caption('ENTREPRENEURS FIRST × PLUTO HOUSE', 15, 825, 16);
   } else {
-    caption('QIAO / ROBOTICS FOUNDERS PROGRAM', 24, 34, 21);
+    caption('BIFROST / ROBOTICS FOUNDERS PROGRAM', 24, 34, 21);
     caption('45 BUILDERS / ZURICH > SHENZHEN', w - 24, 34, 21, 'right');
     word('THE NEXT', -24, 88, 1488, 230);
     word('MOVE IS', 102, 368, 1400, 230);
@@ -73,8 +73,8 @@ async function main() {
   fs.writeFileSync(path.join(assets, 'humanoid.webp'), still.toBuffer('image/webp', 100));
 
   for (const [w, h, source, output] of [
-    [1440, 900, wide, '/tmp/qiao-print-desktop.png'],
-    [390, 844, tall, '/tmp/qiao-print-mobile.png'],
+    [1440, 900, wide, '/tmp/bifrost-print-desktop.png'],
+    [390, 844, tall, '/tmp/bifrost-print-mobile.png'],
     [1200, 750, wide, path.join(assets, 'poster-share.jpg')],
   ]) {
     const canvas = createCanvas(w, h), ctx = canvas.getContext('2d');
