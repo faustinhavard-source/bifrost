@@ -29,34 +29,34 @@ function makePoster(w, h, tall) {
   function caption(text, x, y, size, align = 'left') {
     ctx.save();
     ctx.fillStyle = '#111111';
-    ctx.font = `${size}px Terminal`;
+    ctx.font = `${size}px Poster`;
     ctx.textAlign = align;
     ctx.fillText(text, x, y);
     ctx.restore();
   }
 
   if (tall) {
-    caption('BIFROST', 15, 28, 28);
-    caption('ROBOTICS PROGRAM', 15, 51, 23);
-    caption('45 ROBOTICS', w - 15, 28, 25, 'right');
-    caption('FOUNDERS', w - 15, 51, 23, 'right');
+    caption('BIFROST', 15, 28, 24);
+    caption('ROBOTICS PROGRAM', 15, 51, 16);
+    caption('45 ROBOTICS', w - 15, 28, 18, 'right');
+    caption('FOUNDERS', w - 15, 51, 18, 'right');
     word('THE', -14, 73, 418, 126);
     word('NEXT', 12, 244, 400, 126);
     word('MOVE IS', -17, 414, 423, 118);
     word('PHYSICAL', -12, 576, 414, 126);
-    caption('STARTING WITH 1 WEEK IN ZURICH,', 15, 756, 23);
-    caption('THEN 2 WEEKS IN SHENZHEN.', 15, 781, 23);
-    caption('THE BRIDGE × PLUTO HOUSE', 15, 825, 23);
+    caption('STARTING WITH 1 WEEK IN ZURICH,', 15, 756, 18);
+    caption('THEN 2 WEEKS IN SHENZHEN.', 15, 781, 18);
+    caption('THE BRIDGE × PLUTO HOUSE', 15, 825, 18);
   } else {
-    caption('BIFROST ROBOTICS PROGRAM', 24, 43, 34);
-    caption('45 ROBOTICS FOUNDERS', w - 24, 43, 34, 'right');
+    caption('BIFROST ROBOTICS PROGRAM', 24, 43, 28);
+    caption('45 ROBOTICS FOUNDERS', w - 24, 43, 28, 'right');
     word('THE NEXT', -24, 88, 1488, 230);
     word('MOVE IS', 102, 368, 1400, 230);
     word('PHYSICAL', -43, 652, 1525, 245);
-    caption('STARTING WITH 1 WEEK IN ZURICH,', 24, 940, 30);
-    caption('THEN 2 WEEKS IN SHENZHEN.', 24, 975, 30);
-    caption('THE BRIDGE', w - 24, 940, 30, 'right');
-    caption('× PLUTO HOUSE', w - 24, 975, 30, 'right');
+    caption('STARTING WITH 1 WEEK IN ZURICH,', 24, 940, 24);
+    caption('THEN 2 WEEKS IN SHENZHEN.', 24, 975, 24);
+    caption('THE BRIDGE', w - 24, 940, 24, 'right');
+    caption('× PLUTO HOUSE', w - 24, 975, 24, 'right');
   }
   return canvas.getContent().toString().replace(/(<svg[^>]*>)/, `$1${paper}`);
 }

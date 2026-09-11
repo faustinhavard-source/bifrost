@@ -14,7 +14,7 @@ The site is authored directly in `dist/`. It requires no compilation and no exte
 
 ## Typography
 
-The reference uses **New Mercat**, by Toormix: https://toormix.com/ca/projecte/new-mercat . No New Mercat font file or licence was supplied. The site uses **VT323** by Peter Hull, preserving the pixel terminal style. VT323 is distributed under the SIL Open Font License; the licence is included in `dist/assets/FONT-LICENSE.txt`.
+The reference uses **New Mercat**, by Toormix: https://toormix.com/ca/projecte/new-mercat . No New Mercat font file or licence was supplied. The robot uses **VT323** by Peter Hull, preserving the pixel terminal style. The large headlines and smaller programme captions use outlined **Arial** for a clean sans-serif finish. VT323 is distributed under the SIL Open Font License; the licence is included in `dist/assets/FONT-LICENSE.txt`.
 
 To use the exact reference typeface, supply a properly licensed New Mercat webfont and replace the `Terminal` font-face declaration in `dist/styles.css`, then check the character spacing on the figure.
 
