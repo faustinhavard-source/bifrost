@@ -1,6 +1,6 @@
-# QIAO — first website
+# QIAO — robotics founders programme
 
-A minimal English landing page for the Zurich-to-Shenzhen robotics programme, based on the Partner Brief supplied on 11 September 2026.
+A single-screen English landing page for the Zurich-to-Shenzhen robotics programme, based on the Partner Brief supplied on 11 September 2026.
 
 - Provisional name: QIAO.
 - Source: https://app.notion.com/p/entrepreneursfirst/Partner-Brief-Zurich-to-Shenzhen-3d7e26adb8c9818d9686f1f9edda90aa
@@ -20,7 +20,9 @@ To use the exact reference typeface, supply a properly licensed New Mercat webfo
 
 ## Behaviour
 
-Contact links open the visitor's email application with the QIAO subject. They do not send anything automatically. The displayed Shenzhen clock uses the visitor's device clock and the Asia/Shanghai time zone. Reduced-motion preferences disable the blinking and moving accents.
+Contact links open the visitor's email application with the QIAO subject. They do not send anything automatically. The page uses a viewport-sized layout, with compact arrangements for mobile and short screens. Reduced-motion preferences disable hover transitions. No JavaScript is required.
+
+The hero uses illustrative robotic-hand artwork generated with the built-in Imagegen tool. The source image, provenance and complete prompt are preserved in `design/ASSET-NOTES.md`. The website serves an optimized JPEG.
 
 ## Deployment
 
