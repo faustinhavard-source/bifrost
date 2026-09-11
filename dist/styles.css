@@ -43,6 +43,13 @@ canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%
   transform: translate(-50%, -50%);
 }
 .ready .still { visibility: hidden; }
+@media (max-width: 650px) and (orientation: portrait) {
+  .still {
+    top: 46%;
+    width: min(149.859vw, 70.464svh);
+    width: min(149.859vw, 70.464dvh);
+  }
+}
 .sr-only {
   position: absolute;
   width: 1px;

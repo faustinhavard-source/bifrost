@@ -8,24 +8,24 @@
   const COPY = [
     'BIFROST',
     'THE NEXT MOVE IS PHYSICAL.',
-    'ROBOTICS FOUNDERS PROGRAM',
+    'ROBOTICS PROGRAM',
     'ZURICH TO SHENZHEN',
     'A CALL TO BUILD',
     'HUMANOIDS. MACHINES.',
     'THINGS THAT MOVE.',
     "LET'S GET TO WORK.",
-    '45 ROBOTICS BUILDERS.',
+    'THE 45 BUILDERS.',
     'ZURICH FIRST. THEN SHENZHEN.',
-    'ZURICH / 07–18 DEC 2026',
-    'SHENZHEN / 25 JAN–04 FEB 2027',
+    '1 WEEK IN ZURICH',
+    'THEN 2 WEEKS IN SHENZHEN',
     'BY ENTREPRENEURS FIRST',
-    '× PLUTO HOUSE',
+    '× THE BRIDGE',
   ];
   const CHEST = [
-    'BIFROST / BIFROST', 'ROBOTICS FOUNDERS', 'THE NEXT MOVE', 'IS PHYSICAL.',
-    '45 ROBOTICS BUILDERS.', 'ZURICH FIRST.', 'THEN SHENZHEN.',
+    'BIFROST / BIFROST', 'ROBOTICS PROGRAM', 'THE NEXT MOVE', 'IS PHYSICAL.',
+    'THE 45 BUILDERS.', '1 WEEK IN ZURICH.', '2 WEEKS IN SHENZHEN.',
     'HUMANOIDS. MACHINES.', 'THINGS THAT MOVE.', 'A CALL TO BUILD',
-    "LET'S GET TO WORK.", 'ENTREPRENEURS FIRST', '× PLUTO HOUSE',
+    "LET'S GET TO WORK.", 'ENTREPRENEURS FIRST', '× THE BRIDGE',
   ];
 
   const add = (a, b) => a.map((v, i) => v + b[i]);
@@ -63,10 +63,11 @@
     pelvis: [[0, 42, 25], [.4, 52, 30], [.75, 51, 28], [1, 39, 23]],
     arm: [[0, 18, 18], [.15, 24, 24], [.43, 23, 22], [.83, 17, 17], [1, 14, 14]],
     forearm: [[0, 14, 14], [.22, 19, 19], [.62, 16, 16], [1, 10, 11]],
-    hand: [[0, 10, 10], [.25, 14, 11], [.73, 13, 10], [1, 8, 7]],
+    hand: [[0, 9, 7], [.25, 14, 8], [.75, 14, 7], [1, 12, 6]],
+    finger: [[0, 2.7, 3], [.75, 2.7, 3], [1, 1.7, 2]],
     thigh: [[0, 22, 23], [.2, 29, 29], [.56, 27, 25], [.9, 18, 18], [1, 16, 16]],
     shin: [[0, 16, 16], [.24, 21, 23], [.52, 19, 20], [.85, 12, 13], [1, 12, 12]],
-    foot: [[0, 11, 12], [.22, 15, 23], [.62, 18, 34], [1, 17, 32]],
+    foot: [[0, 11, 14], [.38, 15, 25], [.72, 17, 32], [1, 17, 32]],
   };
 
   function skeleton(phase) {
@@ -98,16 +99,26 @@
       const knee = [hip[0], hip[1] + delta[1] / d * along - delta[2] / d * bend, hip[2] + delta[2] / d * along + delta[1] / d * bend];
       trimmed('thigh', hip, knee, side === 1 ? 10 : 8);
       trimmed('shin', knee, ankle, side === 1 ? 11 : 9);
-      make('foot', add(ankle, [0, -8, 10]), add(ankle, [0, 16, 18]), 3);
+      // Keep each sole level with the ground, independently of the shin angle.
+      make('foot', add(ankle, [0, -8, 14]), add(ankle, [0, 16, 14]), 3);
 
       const swing = -.48 * Math.cos(p);
       const shoulder = at([side * 79, -171, -3]);
       const elbow = add(shoulder, [side * 9, 101 * Math.cos(swing), 101 * Math.sin(swing)]);
       const wrist = add(elbow, [-side * 4, 88 * Math.cos(swing + .24), 88 * Math.sin(swing + .24)]);
-      const fingertips = add(wrist, [0, 34 * Math.cos(swing + .17), 34 * Math.sin(swing + .17)]);
+      const handDown = [0, Math.cos(swing + .17), Math.sin(swing + .17)];
+      const knuckles = add(wrist, mul(handDown, 25));
       trimmed('arm', shoulder, elbow, side === 1 ? 2 : 4);
       trimmed('forearm', elbow, wrist, side === 1 ? 5 : 6);
-      trimmed('hand', wrist, fingertips, 7);
+      trimmed('hand', wrist, knuckles, 7);
+      for (let finger = 0; finger < 4; finger++) {
+        const spread = (finger - 1.5) * 6.8;
+        const base = add(knuckles, [spread, -2, 0]);
+        const tip = add(add(base, mul(handDown, [18, 23, 21, 16][finger])), [spread * .12, 0, 3]);
+        make('finger', base, tip, 14 + finger);
+      }
+      const thumb = add(add(wrist, mul(handDown, 10)), [-side * 12, 0, 0]);
+      make('finger', thumb, add(thumb, [-side * 11, 14, 4]), 18);
     }
 
     const twist = Math.sin(phase) * .045;
@@ -209,8 +220,8 @@
     ctx.fill();
     ctx.restore();
 
-    const size = part.name === 'head' ? 9.2 : part.name === 'foot' ? 8 : 10;
-    const rowHeight = part.name === 'head' ? 7.7 : part.name === 'foot' ? 5 : 8.5;
+    const size = part.name === 'head' ? 9.2 : part.name === 'finger' ? 5 : part.name === 'foot' ? 6.5 : 10;
+    const rowHeight = part.name === 'head' ? 7.7 : part.name === 'finger' || part.name === 'foot' ? 3.5 : 8.5;
     const nRows = Math.max(2, Math.floor(length(sub(part.b, part.a)) / rowHeight));
     const cameraDown = camera(part.axis);
 
@@ -233,7 +244,8 @@
         if (light < .12) continue;
         const charIndex = ((index + Math.floor(text.length / 2)) % line.length + line.length) % line.length;
         const patch = (Math.imul(Math.floor(i / 3) + 1, 73856093) ^ Math.imul(Math.floor(row / 3) + 1, 19349663) ^ Math.imul(part.offset + part.name.length, 83492791)) >>> 0;
-        const kind = patch % 10;
+        const extremity = ['hand', 'finger', 'foot'].includes(part.name);
+        const kind = patch % (extremity ? 8 : 10);
         const char = copyRow ? line[charIndex] : kind === 6 ? String((i + row + part.offset) % 10) : DATA[(patch + i + row * 7) % DATA.length];
         if (copyRow && char === ' ') continue;
         const point = screen(surfacePoint(part, t, angle, radii));
@@ -251,10 +263,11 @@
 
   function drawFrame(ctx, width, height, milliseconds = 0, type) {
     ctx.clearRect(0, 0, width, height);
-    const scale = Math.min(width / 355, height / 665);
+    const portrait = width <= 650 && height > width;
+    const scale = Math.min(width / 355, height / (portrait ? 755 : 665));
     const screen = p => {
       const q = camera(p);
-      return [width / 2 + (q[0] - 6) * scale, height / 2 + (q[1] - 2) * scale];
+      return [width / 2 + (q[0] - 6) * scale, height * (portrait ? .46 : .5) + (q[1] - 2) * scale];
     };
     const phase = milliseconds / 2800 * TAU + .85;
     for (const part of skeleton(phase)) drawPart(ctx, part, screen, scale, type);

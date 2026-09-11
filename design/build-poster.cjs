@@ -27,31 +27,36 @@ function makePoster(w, h, tall) {
     ctx.restore();
   }
   function caption(text, x, y, size, align = 'left') {
+    ctx.save();
+    ctx.fillStyle = '#111111';
     ctx.font = `${size}px Terminal`;
     ctx.textAlign = align;
     ctx.fillText(text, x, y);
-    ctx.textAlign = 'left';
+    ctx.restore();
   }
 
   if (tall) {
-    caption('BIFROST / ROBOTICS', 15, 25, 17);
-    caption('45 BUILDERS', w - 15, 25, 17, 'right');
+    caption('BIFROST', 15, 28, 28);
+    caption('ROBOTICS PROGRAM', 15, 51, 23);
+    caption('THE 45', w - 15, 28, 25, 'right');
+    caption('BUILDERS', w - 15, 51, 23, 'right');
     word('THE', -14, 73, 418, 126);
     word('NEXT', 12, 244, 400, 126);
     word('MOVE IS', -17, 414, 423, 118);
     word('PHYSICAL', -12, 576, 414, 126);
-    caption('ZURICH > SHENZHEN', 15, 757, 26);
-    caption('07–18 DEC 2026 / 25 JAN–04 FEB 2027', 15, 787, 16);
-    caption('ENTREPRENEURS FIRST × PLUTO HOUSE', 15, 825, 16);
+    caption('STARTING WITH 1 WEEK IN ZURICH,', 15, 756, 23);
+    caption('THEN 2 WEEKS IN SHENZHEN.', 15, 781, 23);
+    caption('ENTREPRENEURS FIRST × THE BRIDGE', 15, 825, 23);
   } else {
-    caption('BIFROST / ROBOTICS FOUNDERS PROGRAM', 24, 34, 21);
-    caption('45 BUILDERS / ZURICH > SHENZHEN', w - 24, 34, 21, 'right');
+    caption('BIFROST ROBOTICS PROGRAM', 24, 43, 34);
+    caption('THE 45 BUILDERS', w - 24, 43, 34, 'right');
     word('THE NEXT', -24, 88, 1488, 230);
     word('MOVE IS', 102, 368, 1400, 230);
     word('PHYSICAL', -43, 652, 1525, 245);
-    caption('ZURICH / 07–18 DEC 2026', 24, 962, 23);
-    caption('SHENZHEN / 25 JAN–04 FEB 2027', w / 2, 962, 23, 'center');
-    caption('ENTREPRENEURS FIRST × PLUTO HOUSE', w - 24, 962, 23, 'right');
+    caption('STARTING WITH 1 WEEK IN ZURICH,', 24, 940, 30);
+    caption('THEN 2 WEEKS IN SHENZHEN.', 24, 975, 30);
+    caption('ENTREPRENEURS FIRST', w - 24, 940, 30, 'right');
+    caption('× THE BRIDGE', w - 24, 975, 30, 'right');
   }
   return canvas.getContent().toString().replace(/(<svg[^>]*>)/, `$1${paper}`);
 }
