@@ -282,7 +282,6 @@
   const ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) return;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let paused = reducedMotion.matches;
   let width = 0, height = 0, elapsed = 0, previous = 0, painted = 0, frame = 0;
   let type;
 
@@ -305,9 +304,7 @@
   function syncMotion() {
     cancelAnimationFrame(frame);
     previous = 0;
-    figure.setAttribute('aria-pressed', String(paused));
-    figure.setAttribute('aria-label', paused ? 'Play the walking humanoid' : 'Pause the walking humanoid');
-    if (!paused && !document.hidden) frame = requestAnimationFrame(tick);
+    if (!reducedMotion.matches && !document.hidden) frame = requestAnimationFrame(tick);
     else paint();
   }
 
@@ -324,8 +321,7 @@
     figure.classList.add('ready');
     syncMotion();
     new ResizeObserver(resize).observe(figure);
-    figure.addEventListener('click', () => { paused = !paused; syncMotion(); });
-    reducedMotion.addEventListener('change', e => { paused = e.matches; syncMotion(); });
+    reducedMotion.addEventListener('change', syncMotion);
     document.addEventListener('visibilitychange', syncMotion);
   }).catch(() => { /* Keep the rendered still if the font cannot load. */ });
 })();
