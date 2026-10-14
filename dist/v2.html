@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BIFROST — The next move is physical.</title>
 <meta name="description" content="BIFROST Robotics Program. 45 robotics founders. Starting with 1 week in Zurich, then 2 weeks in Shenzhen. The Bridge × Pluto House.">
-<meta name="theme-color" content="#ff4d00">
+<meta name="theme-color" content="#eeede6">
 <link rel="preload" href="/assets/vt323.ttf" as="font" type="font/ttf" crossorigin>
 <style>
 @font-face{font-family:Terminal;src:url('/assets/vt323.ttf')}*{box-sizing:border-box}::selection{background:#151513;color:#eeeddf}html{background:#ff4d00}body{margin:0;color:#151513;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}main{overflow:hidden}header{position:relative;z-index:5;margin:0 26px;height:88px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid currentColor}.wordmark{display:flex;align-items:center;gap:12px;font-size:34px;font-weight:900;letter-spacing:-2px}.symbol{width:42px;height:34px}.program{font-family:'Courier New',monospace;font-size:12px;line-height:1.2;text-transform:uppercase;letter-spacing:-.3px}.program span{display:block}.header-mark{width:70px;height:28px;background:repeating-linear-gradient(90deg,#151513 0 2px,transparent 2px 5px,#151513 5px 6px,transparent 6px 10px)}.stage{position:relative;min-height:760px;height:calc(100svh - 88px);max-height:1180px;isolation:isolate}.orbit{position:absolute;z-index:-1;left:48%;top:4%;width:42%;height:83%;border:1px solid #151513;border-radius:50%;transform:rotate(28deg)}.orbit:after{content:'';position:absolute;inset:16px;border:1px solid #151513;border-radius:50%}.figure{position:absolute;z-index:2;top:-7%;left:38%;width:48%;height:106%;pointer-events:none;transform:rotate(-9deg)}.figure canvas,.still{position:absolute;width:100%;height:100%;object-fit:contain}.figure.ready .still{visibility:hidden}.headline{position:absolute;inset:5% 0 auto;z-index:3;margin:0;color:#f0efdf;mix-blend-mode:difference;font-family:Impact,'Arial Narrow','Helvetica Neue',Arial,sans-serif;font-stretch:condensed;font-weight:900;text-transform:uppercase;font-size:19.6vw;line-height:.81;letter-spacing:-.065em;pointer-events:none}.headline span{display:block;width:max-content;white-space:nowrap;transform-origin:left center}.headline .one{margin-left:1.3%;transform:scaleX(1.08)}.headline .two{margin-left:8%;transform:scaleX(1.07)}.headline .three{font-family:Arial,Helvetica,sans-serif;font-size:.76em;font-weight:900;margin-top:.06em;margin-left:1%;letter-spacing:-.09em;transform:scaleX(.98)}.call{position:absolute;left:28px;bottom:34px;z-index:4;margin:0;font-family:'Courier New',monospace;font-size:12px;font-weight:bold;line-height:1.4;text-transform:uppercase}.call:before{content:'';display:block;width:42px;height:42px;margin-bottom:18px;background:repeating-linear-gradient(90deg,#151513 0 4px,transparent 4px 7px);clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 68%,68% 68%,68% 32%,0 32%)}.manifesto{position:absolute;right:28px;bottom:34px;z-index:4;font-size:clamp(18px,2vw,32px);line-height:1;letter-spacing:-.06em;font-weight:bold;margin:0;text-align:right}.manifesto span{display:block}.manifesto .work{margin-top:18px;font-family:'Courier New',monospace;font-weight:normal;font-size:12px;text-transform:uppercase;letter-spacing:0}.cross{position:absolute;top:47%;left:25px;width:17px;height:17px}.cross:before,.cross:after{content:'';position:absolute;background:#151513;top:8px;width:17px;height:1px}.cross:after{transform:rotate(90deg)}.index{position:relative;background:#eeeddf;display:grid;grid-template-columns:1fr 1.12fr;min-height:340px;border-top:2px solid #151513}.cohort{display:flex;align-items:center;gap:28px;padding:36px 4vw;border-right:2px solid #151513}.number{font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(140px,20vw,300px);font-weight:900;letter-spacing:-.065em;line-height:.85}.cohort-label{font-family:'Courier New',monospace;font-size:13px;line-height:1.15;text-transform:uppercase;max-width:80px;align-self:flex-end;margin-bottom:16px}.journey{display:flex;flex-direction:column;justify-content:space-between;padding:36px 4vw}.journey p{margin:0;font-size:clamp(23px,3vw,47px);line-height:1.06;letter-spacing:-.06em;max-width:560px}.journey p span{display:block}.partners{font-family:'Courier New',monospace;text-transform:uppercase;font-size:12px;margin-top:32px;display:flex;align-items:center;justify-content:space-between;gap:20px}.bridge-mark{display:block;position:relative;width:56px;height:36px;border:2px solid #151513;border-bottom:0;border-radius:100% 100% 0 0;flex-shrink:0}.bridge-mark:before,.bridge-mark:after{content:'';position:absolute;inset:6px 6px 0;border:2px solid #151513;border-bottom:0;border-radius:100% 100% 0 0}.bridge-mark:after{inset:13px 13px 0}.edge{height:14px;background:repeating-linear-gradient(90deg,#151513 0 14px,#eeeddf 14px 28px)}
@@ -58,6 +58,58 @@ main{grid-template-rows:48px minmax(0,1fr) 100px 6px}
 main{grid-template-rows:48px minmax(0,1fr) 112px 6px}
 .headline{font-size:min(24vw,15vh)}.number{font-size:60px}
 .journey p{font-size:16px}.manifesto{font-size:14px}
+}
+
+
+/* Minimal composition. */
+html{background:#eeede6}
+body{color:#20211e}
+main{grid-template-rows:76px minmax(0,1fr) 96px}
+header{margin:0 4vw;border:0}
+.wordmark{font-size:25px;letter-spacing:-1.4px;font-weight:600}
+.symbol,.header-mark,.orbit,.cross,.edge,.bridge-mark,.call:before{display:none}
+.program{font-size:10px;letter-spacing:0}
+.program span{display:inline}.program span+span:before{content:' '}
+.stage{isolation:isolate}
+.headline{inset:21% auto auto 4vw;font-family:'Helvetica Neue',Arial,sans-serif;font-size:min(9.4vw,14vh);font-weight:500;letter-spacing:-.07em;line-height:.95;color:#20211e;mix-blend-mode:normal;text-transform:none}
+.headline .one,.headline .two,.headline .three{margin:0;transform:none;font:inherit;letter-spacing:inherit}
+.headline .three{color:#f04b20}
+.figure{left:53%;top:-4%;width:40%;height:100%;transform:none;z-index:1}
+.call{left:4vw;bottom:32px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;text-transform:none;letter-spacing:-.02em;font-weight:400;max-width:none}
+.manifesto{right:4vw;bottom:32px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;line-height:1.35;font-weight:400;letter-spacing:-.02em;text-align:right}
+.manifesto span{display:inline}.manifesto span+span:before{content:' '}
+.manifesto .work{display:block;font:inherit;text-transform:none;margin-top:0}
+.index{background:transparent;border:0;border-top:1px solid #20211e30;margin:0 4vw;grid-template-columns:1fr 2fr;min-height:0}
+.cohort{padding:18px 0;border:0;gap:6px;flex-direction:row;align-items:center;justify-content:flex-start}
+.number{font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:400;letter-spacing:0;line-height:1.4}
+.cohort-label{font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.4;text-transform:none;align-self:auto;margin:0;max-width:none}
+.cohort-label br{display:none}
+.journey{padding:18px 0;flex-direction:row;align-items:center;justify-content:space-between;gap:24px}
+.journey p{font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.4;letter-spacing:0;max-width:none}
+.partners{font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;line-height:1.4;text-transform:none;max-width:none;margin:0;display:block}
+@media(max-width:600px){
+main{grid-template-rows:60px minmax(0,1fr) 122px}
+header{margin:0 22px}.wordmark{font-size:23px}.program{font-size:9px}
+.headline{top:8%;left:22px;font-size:min(14vw,10vh);line-height:.98}
+.figure{left:24%;top:20%;width:73%;height:73%;transform:none}
+.call{left:22px;bottom:19px;font-size:11px}
+.manifesto{right:22px;bottom:19px;font-size:11px}
+.manifesto span{display:block}.manifesto span+span:before{content:none}
+.index{margin:0 22px;grid-template-columns:1fr}
+.cohort{padding:10px 0 0;gap:4px}.number,.cohort-label{font-size:12px}
+.journey{padding:0 0 14px;gap:18px;flex-direction:row;align-items:flex-end}
+.journey p{font-size:11px;line-height:1.35;max-width:210px}
+.partners{font-size:10px;max-width:92px;text-align:right}
+}
+@media(max-height:600px) and (min-width:601px){
+main{grid-template-rows:50px minmax(0,1fr) 76px}
+.headline{top:13%;font-size:13vh}.call,.manifesto{bottom:16px}
+.journey p,.number,.cohort-label{font-size:12px}
+}
+@media(max-height:680px) and (max-width:600px){
+main{grid-template-rows:48px minmax(0,1fr) 108px}
+.headline{font-size:10vh;top:5%}.call,.manifesto{bottom:10px;font-size:10px}
+.figure{top:17%;height:75%}
 }
 
 </style>
