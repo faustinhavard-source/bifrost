@@ -138,10 +138,10 @@ void main(){
   col*=1.10;
   float vignette=1.-.27*pow(length((screen-.5)*vec2(1.,.9)),1.5);
   col*=vignette;
-  col=mix(col,vec3(.035,.019,.014),.018);
-  col+=grain*.085*(.45+sqrt(max(col.r,max(col.g,col.b))));
+  col=mix(col,vec3(.041,.025,.017),.035);
+  col+=grain*.15*(.55+sqrt(max(col.r,max(col.g,col.b))));
   vec3 colorGrain=vec3(hash(gl_FragCoord.xy+13.7),hash(gl_FragCoord.xy+41.3),hash(gl_FragCoord.xy+87.1))-.5;
-  col+=colorGrain*.026*smoothstep(.05,.45,max(col.r,max(col.g,col.b)));
+  col+=colorGrain*.047*smoothstep(.05,.45,max(col.r,max(col.g,col.b)));
   gl_FragColor=vec4(col,1.);
 }`;
   function compile(type, source) {
