@@ -1,56 +1,30 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BIFROST — The next move is physical.</title>
-<meta name="description" content="BIFROST Robotics Program. 45 robotics founders. 1 week in Zurich, then 2 weeks in Shenzhen. The Bridge × Pluto House.">
-<meta name="theme-color" content="#167cbb">
-<link rel="preload" href="/assets/bifrost-clouds.jpg?v=7ae8c963" as="image">
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#030306"><title>BIFROST — The next move is physical.</title>
+<meta name="description" content="Bifrost. A passage into the physical world. The Bridge × Pluto House.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23030306'/%3E%3Cpath d='M10 7h5v9l3-3h10l5 5v12l-5 5H10z M15 24a6 6 0 1 0 12 0a6 6 0 1 0-12 0' fill='white' fill-rule='evenodd'/%3E%3C/svg%3E">
 <style>
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
-body{background:#167cbb;color:#fffdf8;font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
-main{position:relative;width:100%;height:100svh;height:100dvh;overflow:hidden;isolation:isolate}
-.art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:-1}
-header{position:absolute;top:7.7%;left:50%;transform:translateX(-50%);width:min(54%,860px);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:clamp(24px,6vw,100px)}
-.nav{padding:8px 0;color:inherit;border:0;background:none;font:300 clamp(12px,1.55vw,22px)/1 Arial,Helvetica,sans-serif;letter-spacing:.035em;text-transform:uppercase;cursor:pointer}
-.nav:first-child{text-align:left}.nav:last-child{text-align:right}
-.nav:hover{opacity:.65}.nav:focus-visible,.close:focus-visible{outline:1px solid currentColor;outline-offset:7px}
-.brand{font-family:'Arial Black',Arial,Helvetica,sans-serif;font-weight:900;font-size:clamp(22px,2.75vw,40px);letter-spacing:-.055em;line-height:1;transform:scaleX(1.12)}
-.hero{position:absolute;left:2%;right:2%;top:16.3%;text-align:center}
-h1{margin:0;font-family:Didot,'Bodoni MT','Times New Roman',serif;font-size:min(10.5vw,15.2dvh);font-weight:400;line-height:.9;letter-spacing:-.055em;text-transform:uppercase}
-h1 span{display:block;white-space:nowrap}
-dialog{color:#fffdf8;background:#123c58f5;border:1px solid #fffdf83b;width:min(490px,calc(100% - 40px));padding:48px 38px 36px;box-shadow:0 20px 100px #123c5840;max-height:90dvh}
-dialog::backdrop{background:#123c5838;backdrop-filter:blur(10px)}
-dialog h2{font:400 38px/1.1 Didot,'Times New Roman',serif;margin:0 0 24px}
-dialog p{font-size:15px;line-height:1.65;margin:14px 0}
-dialog .small{font-size:12px;opacity:.7;margin-top:25px}
-.close{position:absolute;right:17px;top:12px;color:inherit;background:none;border:0;font:300 26px/1 Arial;cursor:pointer;padding:5px}
-@media(max-width:600px){
-header{top:6%;width:calc(100% - 48px);gap:20px}.brand{font-size:23px}.nav{font-size:10px;letter-spacing:.02em}
-.hero{top:17%;left:3%;right:3%}h1{font-size:11.7vw;line-height:1.02;letter-spacing:-.055em}
-.art{object-position:50% 50%}
-}
-@media(max-height:450px) and (min-width:601px){header{top:6%}.hero{top:19%}.brand{font-size:23px}.nav{font-size:12px}}
-</style>
-</head>
-<body>
-<main>
-<img class="art" src="/assets/bifrost-clouds.jpg?v=7ae8c963" alt="" fetchpriority="high">
-<header aria-label="Main navigation">
-<button class="nav" type="button" data-dialog="program">Program</button>
-<div class="brand">BIFROST</div>
-<button class="nav" type="button" data-dialog="partners">Partners</button>
-</header>
-<section class="hero"><h1><span>The next move</span><span>is physical</span></h1></section>
-</main>
-<dialog id="program" aria-labelledby="program-title"><button class="close" type="button" aria-label="Close">×</button><h2 id="program-title">A call to build.</h2><p>Humanoids. Machines.<br>Things that move.</p><p>45 robotics founders.<br>Starting with 1 week in Zurich,<br>then 2 weeks in Shenzhen.</p><p class="small">Let's get to work.</p></dialog>
-<dialog id="partners" aria-labelledby="partners-title"><button class="close" type="button" aria-label="Close">×</button><h2 id="partners-title">Partners</h2><p>The Bridge × Pluto House</p></dialog>
-<script>
-document.querySelectorAll('[data-dialog]').forEach(button=>button.addEventListener('click',()=>document.getElementById(button.dataset.dialog).showModal()));
-document.querySelectorAll('dialog').forEach(dialog=>{
-dialog.querySelector('.close').addEventListener('click',()=>dialog.close());
-dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close()}});
-});
-</script>
-</body></html>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
+body{background:#030306;color:#f4f6f5;-webkit-font-smoothing:antialiased}
+main{position:relative;isolation:isolate;width:100%;height:100svh;height:100dvh;overflow:hidden;background:radial-gradient(ellipse at 15% 0%,#0e4975 0%,transparent 38%),radial-gradient(ellipse at 90% 100%,#102b44,transparent 38%),#030306}
+#cosmos{position:absolute;inset:0;display:block;width:100%;height:100%;opacity:0;transition:opacity 1.8s ease}.ready #cosmos{opacity:1}.fallback #cosmos{opacity:0}
+.wordmark{position:absolute;margin:0;left:50%;top:50%;transform:translate(-50%,-50%);width:min(51vw,790px);filter:drop-shadow(0 2px 18px #0009);pointer-events:none}.wordmark svg{display:block;width:100%;height:auto}
+#motion{position:absolute;right:max(25px,env(safe-area-inset-right));bottom:max(24px,env(safe-area-inset-bottom));display:grid;place-items:center;width:36px;height:36px;padding:10px;background:#080b1040;border:1px solid #fff2;border-radius:50%;color:#fff8;cursor:pointer;transition:color .2s,border-color .2s;backdrop-filter:blur(8px)}
+#motion:hover,#motion:focus-visible{color:#fff;border-color:#fff8}#motion:focus-visible{outline:2px solid #c6ebff;outline-offset:5px}#motion svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.4}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:700px){.wordmark{width:80vw}#motion{right:18px;bottom:20px}}@media(prefers-reduced-motion:reduce){#cosmos{transition:none}}
+</style></head><body><main aria-label="Bifrost">
+<canvas id="cosmos" aria-hidden="true"></canvas>
+<h1 class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1836 370" role="img" aria-labelledby="logo-title"><title id="logo-title">Bifrost</title><g fill="currentColor" fill-rule="evenodd">
+<path d="M0 0H80V90C80 98 83 99 89 93L112 70H265L340 145V295L265 370H0Z M80 220C80 170.294 120.294 130 170 130C219.706 130 260 170.294 260 220C260 269.706 219.706 310 170 310C120.294 310 80 269.706 80 220Z"/>
+<path transform="translate(356)" d="M0 0H80V70H0Z M0 96H80V370H0Z"/>
+<path transform="translate(452)" d="M0 370V95L95 0H230V70H128L84 114C78.667 119.333 80 122 88 122H210V192H80V370Z"/>
+<path transform="translate(698 70)" d="M0 0H80V20C80 28 83 29 89 23L112 0H190V60H170C120 60 80 100 80 150V300H0Z"/>
+<path transform="translate(904 70)" d="M75 0H265L340 75V225L265 300H75L0 225V75Z M80 150C80 100.294 120.294 60 170 60C219.706 60 260 100.294 260 150C260 199.706 219.706 240 170 240C120.294 240 80 199.706 80 150Z"/>
+<path transform="translate(1260 70)" d="M75 0H255L330 75V100H250L219 69C213 63 206 60 198 60H117C69 60 69 120 117 120H255L330 195V225L255 300H75L0 225V200H80L111 231C117 237 124 240 132 240H213C261 240 261 180 213 180H75L0 105V75Z"/>
+<path transform="translate(1606)" d="M0 0H80V90C80 98 83 99 89 93L112 70H230V130H160C115.817 130 80 170.294 80 220C80 269.706 115.817 310 160 310H230V370H75L0 295Z"/>
+</g></svg></h1>
+<p class="sr-only">The next move is physical. Bifrost Robotics Program. The Bridge × Pluto House.</p>
+<button id="motion" type="button" aria-label="Pause animation" aria-pressed="false" title="Pause / resume animation"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3V13M11 3V13"/></svg></button>
+</main><script src="./liquid.js"></script></body></html>
