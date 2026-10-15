@@ -45,13 +45,16 @@ vec3 environment(vec3 r){
   float az=atan(r.x,r.z),el=asin(clamp(r.y,-1.,1.));
   float warp=az+.24*sin(el*4.)+.1*sin(az*3.-el*2.);
   float band=.5+.5*sin(warp*3.1+el*1.6);
-  float spectralPhase=warp*.48+el*.63+time*.008;
-  vec3 spectrum=.5+.5*cos(6.2831853*(spectralPhase+vec3(0.,.333,.667)));
-  spectrum=pow(spectrum,vec3(1.35));
+  float spectralPhase=.5+.5*sin(warp*.82+el*1.05+time*.018);
+  // Broad fire-to-blue reflections, with a silver bridge instead of magenta.
+  vec3 spectrum=mix(vec3(.92,.025,.006),vec3(1.,.24,.008),smoothstep(.05,.28,spectralPhase));
+  spectrum=mix(spectrum,vec3(1.,.70,.035),smoothstep(.28,.49,spectralPhase));
+  spectrum=mix(spectrum,vec3(.70,.80,.88),smoothstep(.52,.62,spectralPhase));
+  spectrum=mix(spectrum,vec3(.015,.20,.95),smoothstep(.62,.77,spectralPhase));
   vec3 c=vec3(.012,.010,.014);
   c+=spectrum*.30*smoothstep(.18,.67,band);
   c+=(spectrum*.82+vec3(.025))*smoothstep(.57,.80,band);
-  c+=mix(spectrum,vec3(1.),.42)*.72*smoothstep(.78,.93,band);
+  c+=mix(spectrum,vec3(1.),.25)*.72*smoothstep(.78,.93,band);
   c+=vec3(1.05,1.04,.99)*pow(max(0.,dot(r,normalize(vec3(-.6,1.,1.2)))),28.);
   c+=vec3(.94,.91,1.)*pow(max(0.,dot(r,normalize(vec3(1.,-.35,.8)))),42.);
   c+=vec3(1.1,.64,.37)*pow(max(0.,dot(r,normalize(vec3(-1.,-.6,.4)))),95.)*.5;
