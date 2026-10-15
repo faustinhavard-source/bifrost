@@ -10,10 +10,11 @@ body{background:#030306;color:#f4f6f5;-webkit-font-smoothing:antialiased}
 main{position:relative;isolation:isolate;width:100%;height:100svh;height:100dvh;overflow:hidden;background:radial-gradient(ellipse at 15% 0%,#0e4975 0%,transparent 38%),radial-gradient(ellipse at 90% 100%,#102b44,transparent 38%),#030306}
 #cosmos{position:absolute;inset:0;display:block;width:100%;height:100%;opacity:0;transition:opacity 1.8s ease}.ready #cosmos{opacity:1}.fallback #cosmos{opacity:0}
 .wordmark{position:absolute;margin:0;left:50%;top:50%;transform:translate(-50%,-50%);width:min(51vw,790px);filter:drop-shadow(0 2px 18px #0009);pointer-events:none}.wordmark svg{display:block;width:100%;height:auto}
+.tagline{position:absolute;left:50%;top:calc(50% + min(5.14vw,79.6px) + 26px);transform:translateX(-50%);margin:0;width:90%;text-align:center;font:400 clamp(12px,1.15vw,16px)/1.5 Arial,Helvetica,sans-serif;letter-spacing:.15em;color:#f1f0ec;text-shadow:0 2px 12px #000,0 0 24px #000}
 #motion{position:absolute;right:max(25px,env(safe-area-inset-right));bottom:max(24px,env(safe-area-inset-bottom));display:grid;place-items:center;width:36px;height:36px;padding:10px;background:#080b1040;border:1px solid #fff2;border-radius:50%;color:#fff8;cursor:pointer;transition:color .2s,border-color .2s;backdrop-filter:blur(8px)}
 #motion:hover,#motion:focus-visible{color:#fff;border-color:#fff8}#motion:focus-visible{outline:2px solid #c6ebff;outline-offset:5px}#motion svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.4}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-@media(max-width:700px){.wordmark{width:80vw}#motion{right:18px;bottom:20px}}@media(prefers-reduced-motion:reduce){#cosmos{transition:none}}
+@media(max-width:700px){.wordmark{width:80vw}.tagline{top:calc(50% + 8.06vw + 23px);letter-spacing:.11em}#motion{right:18px;bottom:20px}}@media(prefers-reduced-motion:reduce){#cosmos{transition:none}}
 </style></head><body><main aria-label="Bifrost">
 <canvas id="cosmos" aria-hidden="true"></canvas>
 <h1 class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1836 370" role="img" aria-labelledby="logo-title"><title id="logo-title">Bifrost</title><g fill="currentColor" fill-rule="evenodd">
@@ -25,6 +26,7 @@ main{position:relative;isolation:isolate;width:100%;height:100svh;height:100dvh;
 <path transform="translate(1260 70)" d="M75 0H255L330 75V100H250L219 69C213 63 206 60 198 60H117C69 60 69 120 117 120H255L330 195V225L255 300H75L0 225V200H80L111 231C117 237 124 240 132 240H213C261 240 261 180 213 180H75L0 105V75Z"/>
 <path transform="translate(1606)" d="M0 0H80V90C80 98 83 99 89 93L112 70H230V130H160C115.817 130 80 170.294 80 220C80 269.706 115.817 310 160 310H230V370H75L0 295Z"/>
 </g></svg></h1>
-<p class="sr-only">The next move is physical. Bifrost Robotics Program. The Bridge × Pluto House.</p>
+<p class="tagline">The next move is physical</p>
+<p class="sr-only">Bifrost Robotics Program. The Bridge × Pluto House.</p>
 <button id="motion" type="button" aria-label="Pause animation" aria-pressed="false" title="Pause / resume animation"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3V13M11 3V13"/></svg></button>
 </main><script src="./liquid.js"></script></body></html>
