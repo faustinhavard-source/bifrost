@@ -45,16 +45,21 @@ vec3 environment(vec3 r){
   float az=atan(r.x,r.z),el=asin(clamp(r.y,-1.,1.));
   float warp=az+.24*sin(el*4.)+.1*sin(az*3.-el*2.);
   float band=.5+.5*sin(warp*3.1+el*1.6);
-  // Cold broad light reflected in silver; warm light appears only in glints.
+  // Warm photographic iridescence inspired by the supplied color reference.
+  float hue=.5+.5*sin(warp*.85+el*1.3+time*.022);
+  vec3 tint=mix(vec3(.40,.15,.53),vec3(.96,.22,.24),smoothstep(.02,.23,hue));
+  tint=mix(tint,vec3(1.,.48,.23),smoothstep(.23,.42,hue));
+  tint=mix(tint,vec3(.94,.83,.36),smoothstep(.42,.59,hue));
+  tint=mix(tint,vec3(.24,.76,.66),smoothstep(.59,.78,hue));
+  tint=mix(tint,vec3(.19,.66,.81),smoothstep(.78,.98,hue));
   vec3 c=vec3(.014,.010,.013);
-  c+=vec3(.040,.045,.052)*smoothstep(.28,.65,band);
-  c+=vec3(.29,.34,.38)*smoothstep(.57,.85,band);
-  c+=vec3(.74,.80,.83)*smoothstep(.76,.96,band);
+  c+=tint*.075*smoothstep(.28,.65,band);
+  c+=tint*.66*smoothstep(.57,.85,band);
+  c+=mix(tint,vec3(.92,.94,.93),.34)*.86*smoothstep(.76,.96,band);
   c+=vec3(1.12,1.06,.94)*pow(max(0.,dot(r,normalize(vec3(-.6,1.,1.2)))),18.);
   c+=vec3(.90,.95,1.)*pow(max(0.,dot(r,normalize(vec3(1.,-.35,.8)))),30.);
   c+=vec3(1.2,.34,.075)*pow(max(0.,dot(r,normalize(vec3(-1.,-.6,.4)))),75.)*.9;
-  c+=vec3(.91,.98,1.)*exp(-pow((band-.78)*32.,2.))*.78;
-  c+=vec3(.24,.075,.012)*exp(-pow((band-.54)*45.,2.));
+  c+=vec3(.97,.98,1.)*exp(-pow((band-.78)*32.,2.))*.78;
   return c;
 }
 vec3 stars(vec2 uv,float scale,float threshold){
@@ -128,6 +133,8 @@ void main(){
   col*=vignette;
   col=mix(col,vec3(.043,.024,.019),.045);
   col+=grain*.085*(.45+sqrt(max(col.r,max(col.g,col.b))));
+  vec3 colorGrain=vec3(hash(gl_FragCoord.xy+13.7),hash(gl_FragCoord.xy+41.3),hash(gl_FragCoord.xy+87.1))-.5;
+  col+=colorGrain*.026*smoothstep(.05,.45,max(col.r,max(col.g,col.b)));
   gl_FragColor=vec4(col,1.);
 }`;
   function compile(type, source) {
