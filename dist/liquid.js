@@ -47,9 +47,9 @@ vec3 environment(vec3 r){
   float band=.5+.5*sin(warp*3.1+el*1.6);
   // Cold broad light reflected in silver; warm light appears only in glints.
   vec3 c=vec3(.014,.010,.013);
-  c+=vec3(.022,.045,.075)*smoothstep(.28,.65,band);
-  c+=vec3(.055,.34,.53)*smoothstep(.57,.85,band);
-  c+=vec3(.53,.78,.87)*smoothstep(.76,.96,band);
+  c+=vec3(.040,.045,.052)*smoothstep(.28,.65,band);
+  c+=vec3(.29,.34,.38)*smoothstep(.57,.85,band);
+  c+=vec3(.74,.80,.83)*smoothstep(.76,.96,band);
   c+=vec3(1.12,1.06,.94)*pow(max(0.,dot(r,normalize(vec3(-.6,1.,1.2)))),18.);
   c+=vec3(.90,.95,1.)*pow(max(0.,dot(r,normalize(vec3(1.,-.35,.8)))),30.);
   c+=vec3(1.2,.34,.075)*pow(max(0.,dot(r,normalize(vec3(-1.,-.6,.4)))),75.)*.9;
@@ -108,7 +108,17 @@ void main(){
     flare+=exp(-abs(q.x)*1200.-abs(q.y)*48.)*.6;
     flare+=exp(-abs(q.y)*1200.-abs(q.x)*48.)*.6;
     float halo=exp(-d*90.)*.22;
-    col+=vec3(1.1,.76,.39)*flare+vec3(1.,.17,.025)*halo;
+    col+=vec3(1.1,.91,.70)*flare+vec3(1.,.24,.045)*halo;
+    // Split light into small spectral fringes around the silver flare.
+    float spread=.007+.003*sin(k*2.1);
+    vec2 redQ=q-vec2(spread,0.);
+    vec2 blueQ=q+vec2(spread,0.);
+    float red=exp(-abs(redQ.x)*310.-abs(redQ.y)*105.);
+    float blue=exp(-abs(blueQ.x)*310.-abs(blueQ.y)*105.);
+    float gold=exp(-abs(q.y-spread*.8)*370.-abs(q.x)*115.);
+    col+=vec3(1.,.15,.025)*red*.62;
+    col+=vec3(.055,.38,1.)*blue*.68;
+    col+=vec3(1.,.68,.08)*gold*.38;
   }
   // Pointlike film grain, sampled per pixel; no patterned noise or displacement.
   float grain=hash(gl_FragCoord.xy+floor(time*12.)*vec2(19.1,7.7))-.5;
