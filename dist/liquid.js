@@ -52,13 +52,19 @@ vec3 environment(vec3 r){
   tint=mix(tint,vec3(.94,.83,.36),smoothstep(.42,.59,hue));
   tint=mix(tint,vec3(.24,.76,.66),smoothstep(.59,.78,hue));
   tint=mix(tint,vec3(.19,.66,.81),smoothstep(.78,.98,hue));
-  vec3 c=vec3(.014,.010,.013);
-  c+=tint*.075*smoothstep(.28,.65,band);
-  c+=tint*.66*smoothstep(.57,.85,band);
-  c+=mix(tint,vec3(.92,.94,.93),.34)*.86*smoothstep(.76,.96,band);
-  c+=vec3(1.12,1.06,.94)*pow(max(0.,dot(r,normalize(vec3(-.6,1.,1.2)))),18.);
-  c+=vec3(.90,.95,1.)*pow(max(0.,dot(r,normalize(vec3(1.,-.35,.8)))),30.);
-  c+=vec3(1.2,.34,.075)*pow(max(0.,dot(r,normalize(vec3(-1.,-.6,.4)))),75.)*.9;
+  // Neutral silver dominates; color belongs to localized reflected light sources.
+  float coloredCard=smoothstep(.40,.82,sin(az*1.65-el*2.1+.8));
+  float coloredEdge=exp(-pow((band-.68)*12.,2.));
+  float colorMask=coloredCard*coloredEdge*.85;
+  vec3 reflection=mix(vec3(.74,.77,.79),tint,colorMask);
+  vec3 c=vec3(.014,.013,.014);
+  c+=vec3(.045,.047,.050)*smoothstep(.28,.65,band);
+  c+=reflection*.64*smoothstep(.50,.83,band);
+  c+=vec3(.79,.82,.84)*.88*smoothstep(.77,.96,band);
+  c+=tint*coloredCard*exp(-pow((band-.59)*21.,2.))*.20;
+  c+=vec3(1.12,1.08,1.02)*pow(max(0.,dot(r,normalize(vec3(-.6,1.,1.2)))),18.);
+  c+=vec3(.95,.97,1.)*pow(max(0.,dot(r,normalize(vec3(1.,-.35,.8)))),30.);
+  c+=vec3(1.2,.50,.20)*pow(max(0.,dot(r,normalize(vec3(-1.,-.6,.4)))),75.)*.5;
   c+=vec3(.97,.98,1.)*exp(-pow((band-.78)*32.,2.))*.78;
   return c;
 }
