@@ -41,19 +41,22 @@ vec3 normalAt(vec3 p){
   return normalize(vec3(scene(p+e.xyy)-scene(p-e.xyy),scene(p+e.yxy)-scene(p-e.yxy),scene(p+e.yyx)-scene(p-e.yyx)));
 }
 vec3 environment(vec3 r){
-  // Large studio cards and blue sky reflected in polished silver.
+  // Prismatic reflection bands: the spectrum follows the reflected angle.
   float az=atan(r.x,r.z),el=asin(clamp(r.y,-1.,1.));
   float warp=az+.24*sin(el*4.)+.1*sin(az*3.-el*2.);
   float band=.5+.5*sin(warp*3.1+el*1.6);
-  vec3 c=vec3(.008,.012,.023);
-  c+=vec3(.015,.075,.30)*smoothstep(.18,.67,band);
-  c+=vec3(.025,.43,.88)*smoothstep(.57,.80,band);
-  c+=vec3(.48,.88,1.15)*smoothstep(.78,.93,band);
+  float spectralPhase=warp*.48+el*.63+time*.008;
+  vec3 spectrum=.5+.5*cos(6.2831853*(spectralPhase+vec3(0.,.333,.667)));
+  spectrum=pow(spectrum,vec3(1.35));
+  vec3 c=vec3(.012,.010,.014);
+  c+=spectrum*.30*smoothstep(.18,.67,band);
+  c+=(spectrum*.82+vec3(.025))*smoothstep(.57,.80,band);
+  c+=mix(spectrum,vec3(1.),.42)*.72*smoothstep(.78,.93,band);
   c+=vec3(1.05,1.04,.99)*pow(max(0.,dot(r,normalize(vec3(-.6,1.,1.2)))),28.);
-  c+=vec3(.55,.82,1.)*pow(max(0.,dot(r,normalize(vec3(1.,-.35,.8)))),42.);
+  c+=vec3(.94,.91,1.)*pow(max(0.,dot(r,normalize(vec3(1.,-.35,.8)))),42.);
   c+=vec3(1.1,.64,.37)*pow(max(0.,dot(r,normalize(vec3(-1.,-.6,.4)))),95.)*.5;
-  // Narrow white reflection at the edge of the broad blue panel.
-  c+=vec3(.85,.95,1.)*exp(-pow((band-.78)*38.,2.))*.65;
+  // Silver highlights preserve the tactile chrome beneath the diffraction.
+  c+=vec3(.96,.96,1.)*exp(-pow((band-.78)*38.,2.))*.65;
   return c;
 }
 vec3 stars(vec2 uv,float scale,float threshold){
@@ -92,7 +95,7 @@ void main(){
     float ao=clamp(scene(p+n*.13)/.062,0.35,1.);
     col=environment(r)*(.72+.28*ao);
     col+=environment(reflect(rd,normalize(n+vec3(.01,.02,0.))))*.1*fresnel;
-    col+=vec3(.09,.15,.20)*fresnel;
+    col+=vec3(.13,.12,.14)*fresnel;
     float spec=pow(max(dot(r,normalize(vec3(-.4,.7,1.))),0.),260.);
     col+=vec3(1.2,1.,.8)*spec*.65;
   }
