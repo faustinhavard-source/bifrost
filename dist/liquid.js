@@ -47,20 +47,20 @@ vec3 environment(vec3 r){
   float band=.5+.5*sin(warp*3.1+el*1.6);
   // Warm photographic iridescence inspired by the supplied color reference.
   float hue=.5+.5*sin(warp*.85+el*1.3+time*.022);
-  vec3 tint=mix(vec3(.40,.15,.53),vec3(.96,.22,.24),smoothstep(.02,.23,hue));
-  tint=mix(tint,vec3(1.,.48,.23),smoothstep(.23,.42,hue));
-  tint=mix(tint,vec3(.94,.83,.36),smoothstep(.42,.59,hue));
-  tint=mix(tint,vec3(.24,.76,.66),smoothstep(.59,.78,hue));
-  tint=mix(tint,vec3(.19,.66,.81),smoothstep(.78,.98,hue));
+  vec3 tint=mix(vec3(.38,.055,.57),vec3(1.,.105,.12),smoothstep(.02,.23,hue));
+  tint=mix(tint,vec3(1.,.36,.075),smoothstep(.23,.42,hue));
+  tint=mix(tint,vec3(1.,.78,.14),smoothstep(.42,.59,hue));
+  tint=mix(tint,vec3(.07,.82,.66),smoothstep(.59,.78,hue));
+  tint=mix(tint,vec3(.045,.68,.91),smoothstep(.78,.98,hue));
   // Neutral silver dominates; color belongs to localized reflected light sources.
   float coloredCard=smoothstep(.20,.75,sin(az*1.65-el*2.1+.8));
   float coloredEdge=exp(-pow((band-.68)*12.,2.));
-  float colorMask=coloredCard*(.65+.30*coloredEdge);
+  float colorMask=coloredCard*(.78+.20*coloredEdge);
   vec3 reflection=mix(vec3(.74,.77,.79),tint,colorMask);
   vec3 c=vec3(.014,.013,.014);
   c+=vec3(.045,.047,.050)*smoothstep(.28,.65,band);
   c+=reflection*.64*smoothstep(.50,.83,band);
-  c+=mix(vec3(.79,.82,.84),tint, coloredCard*.78)*.88*smoothstep(.77,.96,band);
+  c+=mix(vec3(.79,.82,.84),tint, coloredCard*.94)*.88*smoothstep(.77,.96,band);
   c+=tint*coloredCard*exp(-pow((band-.59)*21.,2.))*.20;
   c+=vec3(1.12,1.08,1.02)*pow(max(0.,dot(r,normalize(vec3(-.6,1.,1.2)))),18.);
   c+=vec3(.95,.97,1.)*pow(max(0.,dot(r,normalize(vec3(1.,-.35,.8)))),30.);
@@ -133,11 +133,12 @@ void main(){
   }
   // Pointlike film grain, sampled per pixel; no patterned noise or displacement.
   float grain=hash(gl_FragCoord.xy+floor(time*12.)*vec2(19.1,7.7))-.5;
-  col=col/(vec3(1.)+col*.28);
-  col=pow(max(col,0.),vec3(.87));
+  col=col/(vec3(1.)+col*.22);
+  col=pow(max(col,0.),vec3(1.04));
+  col*=1.10;
   float vignette=1.-.27*pow(length((screen-.5)*vec2(1.,.9)),1.5);
   col*=vignette;
-  col=mix(col,vec3(.043,.024,.019),.045);
+  col=mix(col,vec3(.035,.019,.014),.018);
   col+=grain*.085*(.45+sqrt(max(col.r,max(col.g,col.b))));
   vec3 colorGrain=vec3(hash(gl_FragCoord.xy+13.7),hash(gl_FragCoord.xy+41.3),hash(gl_FragCoord.xy+87.1))-.5;
   col+=colorGrain*.026*smoothstep(.05,.45,max(col.r,max(col.g,col.b)));
