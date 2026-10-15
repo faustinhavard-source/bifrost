@@ -52,12 +52,12 @@ vec3 environment(vec3 r){
   spectrum=mix(spectrum,vec3(.70,.80,.88),smoothstep(.52,.62,spectralPhase));
   spectrum=mix(spectrum,vec3(.015,.20,.95),smoothstep(.62,.77,spectralPhase));
   // Silver is the material; restrained diffraction only grazes reflection edges.
-  float diffraction=.13+.22*exp(-pow((band-.70)*19.,2.));
+  float diffraction=.30+.30*exp(-pow((band-.70)*14.,2.));
   spectrum=mix(vec3(.86,.88,.91),spectrum,diffraction);
   vec3 c=vec3(.012,.010,.014);
   c+=spectrum*.30*smoothstep(.18,.67,band);
   c+=(spectrum*.82+vec3(.025))*smoothstep(.57,.80,band);
-  c+=mix(spectrum,vec3(1.),.65)*.72*smoothstep(.78,.93,band);
+  c+=mix(spectrum,vec3(1.),.45)*.72*smoothstep(.78,.93,band);
   c+=vec3(1.05,1.04,.99)*pow(max(0.,dot(r,normalize(vec3(-.6,1.,1.2)))),28.);
   c+=vec3(.94,.91,1.)*pow(max(0.,dot(r,normalize(vec3(1.,-.35,.8)))),42.);
   c+=vec3(1.02,.96,.88)*pow(max(0.,dot(r,normalize(vec3(-1.,-.6,.4)))),95.)*.5;
