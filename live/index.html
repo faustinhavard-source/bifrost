@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BIFROST, the next move is physical</title>
+<meta name="description" content="Bifrost Robotics Program. 45 robotics founders. One week in Zurich, then two weeks in Shenzhen. The Bridge x Pluto House.">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#f4f6f5;overscroll-behavior:none}
+.stage{position:relative;width:100vw;height:100vh;height:100dvh;overflow:hidden;background:#000}
+.scroller{position:absolute;inset:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.scroller::-webkit-scrollbar{display:none}
+.scroller:focus-visible{outline:2px solid #c6ebff;outline-offset:-4px}
+.track{position:relative;width:300vw;height:100%}
+canvas{position:sticky;left:0;top:0;display:block;width:100vw;height:100%;touch-action:pan-x}
+.slides{position:absolute;inset:0;display:flex;pointer-events:none}
+.slide{position:relative;width:100vw;height:100%;flex:none}
+.logo-btn{position:absolute;left:50%;top:50%;width:40vh;height:40vh;transform:translate(-50%,-50%);pointer-events:auto;margin:0;padding:0;border:0;border-radius:50%;background:none;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.logo-btn:active{cursor:grabbing}
+.logo-btn:focus-visible{outline:2px solid #c6ebff;outline-offset:10px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+</style>
+</head>
+<body>
+<main class="stage">
+<h1 class="sr-only">Bifrost. The next move is physical.</h1>
+<p class="sr-only">Bifrost Robotics Program. 45 robotics founders. One week in Zurich, then two weeks in Shenzhen. The Bridge x Pluto House.</p>
+<div class="scroller" id="scroller" tabindex="0" role="region" aria-label="Bifrost, three slides, scroll sideways">
+<div class="track">
+<canvas id="view" role="img" aria-label="Clear glass streams flowing across a night sky, splitting white light into a spectrum"></canvas>
+<div class="slides">
+<section class="slide" aria-label="Bifrost"><button class="logo-btn" id="logo" type="button" aria-label="Bifrost symbol in clear glass. Press and hold to spin it"></button></section>
+<section class="slide" aria-label="Program"></section>
+<section class="slide" aria-label="Founders"></section>
+</div>
+</div>
+</div>
+</main>
+<script>
+// minimal stand-ins for the design editor runtime, so the same component code runs as a plain page
+var React = { createRef: function () { return { current: null }; } };
+class DCLogic {
+  constructor(props) { this.props = props || {}; this.state = {}; }
+  setState(next, done) {
+    Object.assign(this.state, typeof next === 'function' ? next(this.state) : next);
+    if (this.componentDidUpdate) this.componentDidUpdate();
+    if (done) done();
+  }
+}
+/* Shader kit */
+function shaderStage(logic, frag) {
+var calm = matchMedia('(prefers-reduced-motion: reduce)');
+var view, paint, buf, gl, uni, raf = 0, away = 0, shown = true, broken = false, fresh = true, before = '', tints = {};
+var time = 12, clock = 0, last = 0, down = false, inside = false, press = 0;
+var level = 0, ticks = 0, due = 0, next = 0, wait = 2, sharp = 1.5;
+var aim = [0.5, 0.5], mouse = [0.5, 0.5], trail = [], oops = 'This shader has an error. Ask Claude to fix it. ';
+function fail(text) { broken = true; halt(); sleep(); logic.error = text; logic.setState({}); }
+function part(kind, code) {
+  var s = gl.createShader(kind);
+  if (!s) return;
+  gl.shaderSource(s, code); gl.compileShader(s);
+  if (gl.getShaderParameter(s, gl.COMPILE_STATUS) || gl.isContextLost()) return s;
+  var log = gl.getShaderInfoLog(s) || '', m = /ERROR: \d+:(\d+): (.*)/.exec(log);
+  fail(oops + (m ? 'Shader line ' + m[1] + ': ' + m[2] : log));
+}
+function wake() {
+  if (gl && gl.isContextLost()) gl = null;
+  if (gl || broken) return !!gl;
+  buf = document.createElement('canvas');
+  gl = buf.getContext('webgl2', { alpha: false, antialias: false });
+  if (!gl) {
+    broken = !uni;
+    if (broken) view.title = 'This browser can’t draw shaders. You can turn on hardware acceleration or try another browser.';
+    return false;
+  }
+  var v = part(gl.VERTEX_SHADER, '#version 300 es\nvoid main(){vec2 p=vec2(gl_VertexID<<1&2,gl_VertexID&2);gl_Position=vec4(p*2.-1.,0.,1.);}');
+  var f = v && part(gl.FRAGMENT_SHADER, '#version 300 es\nprecision highp float;\nout vec4 outColor;\n#line 1\n' + frag);
+  if (!f) return false;
+  var prog = gl.createProgram();
+  if (!prog) return false;
+  gl.attachShader(prog, v); gl.attachShader(prog, f); gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS) && !gl.isContextLost()) { fail(oops + gl.getProgramInfoLog(prog)); return false; }
+  gl.useProgram(prog);
+  uni = {};
+  for (var i = gl.getProgramParameter(prog, gl.ACTIVE_UNIFORMS) - 1; i >= 0; i--) {
+    var a = gl.getActiveUniform(prog, i);
+    uni[a.name.replace('[0]', '')] = { at: gl.getUniformLocation(prog, a.name), type: a.type };
+  }
+  var atlas = logic.atlas;
+  if (atlas) {
+    var tx = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tx);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, atlas);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    if (uni.uGlyphs) gl.uniform1i(uni.uGlyphs.at, 0);
+  }
+  fresh = true;
+  return true;
+}
+function sleep() {
+  var x = gl && gl.getExtension('WEBGL_lose_context');
+  gl = null; if (x) x.loseContext();
+}
+function tint(color) {
+  if (!tints[color]) {
+    var g = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    g.fillStyle = color; g.fillRect(0, 0, 1, 1);
+    tints[color] = Array.from(g.getImageData(0, 0, 1, 1).data.slice(0, 3), (n) => n / 255);
+  }
+  return tints[color];
+}
+function put(name, v) {
+  var u = uni[name];
+  if (!u) return;
+  if (typeof v === 'string') v = tint(v);
+  if (u.type === gl.FLOAT) gl.uniform1f(u.at, v);
+  else if (u.type === gl.INT || u.type === gl.BOOL) gl.uniform1i(u.at, +v);
+  else if (u.type === gl.FLOAT_VEC2) gl.uniform2fv(u.at, v);
+  else if (u.type === gl.FLOAT_VEC3) gl.uniform3fv(u.at, v);
+}
+function draw(now) {
+  var dt = Math.min(0.2, (now - last) / 1000), vals = logic.uniforms(), still = calm.matches, text = JSON.stringify(vals), rate = vals.speed == null ? 1 : vals.speed;
+  last = now; clock += dt * rate;
+  if (!still) time += dt * rate;
+  if (!inside && !still) {
+    aim = [0.5 + 0.3 * Math.sin(time * 0.37), 0.5 + 0.24 * Math.sin(time * 0.53 + 1.1)];
+    drop(false);
+  }
+  var x = mouse[0], y = mouse[1], k = 1 - Math.pow(0.86, dt * 60);
+  mouse = [x + (aim[0] - x) * k, y + (aim[1] - y) * k];
+  press += ((down ? 1 : 0) - press) * k;
+  var cw = view.clientWidth, ch = view.clientHeight, s = Math.min(devicePixelRatio || 1, 1.5);
+  if (!view.__omCapGl) s = Math.pow(0.7, level) * Math.min(s, sharp, Math.sqrt(2.0736e6 / (cw * ch)));
+  var w = Math.max(2, Math.round(cw * s)), h = Math.max(2, Math.round(ch * s));
+  if (view.width !== w || view.height !== h) { view.width = w; view.height = h; fresh = true; }
+  var moved = Math.abs(mouse[0] - x) + Math.abs(mouse[1] - y) > 0.0005 || (press > 0.01 && press < 0.99);
+  if (still && !fresh && !moved && text === before) return;
+  before = text; fresh = false;
+  if (buf.width !== w || buf.height !== h) { buf.width = w; buf.height = h; }
+  gl.viewport(0, 0, w, h);
+  for (var name in vals) put(name, vals[name]);
+  put('uTime', time); put('uResolution', [w, h]); put('uMouse', mouse); put('uPress', press);
+  if (uni.uTrail) {
+    var t = new Float32Array(36);
+    for (var i = 0; i < 12; i++) {
+      var p = trail[i] || [0, 0, clock + 1];
+      t[i * 3] = p[0]; t[i * 3 + 1] = p[1]; t[i * 3 + 2] = clock - p[2];
+    }
+    gl.uniform3fv(uni.uTrail.at, t);
+  }
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  paint.drawImage(buf, 0, 0);
+}
+function frame(now) {
+  try { draw(now); } catch (e) { fail(oops + e.message); }
+}
+function count(now) { ticks = 0; due = now + 2e3; }
+function tune(now) {
+  var f = frameElement;
+  sharp = f && f.getBoundingClientRect().width < f.offsetWidth / 2 ? 1 : 1.5;
+  if (ticks < 50 && !calm.matches) { level += level < 5; next = now + wait * 1e3; }
+  else if (level && now > next) { level--; wait = Math.min(wait * 2, 64); next = now + wait * 1e3; }
+  count(now);
+}
+function tick(now) {
+  raf = gl && !gl.isContextLost() ? requestAnimationFrame(tick) : 0;
+  if (!raf) return;
+  ticks++;
+  if (now > due) tune(now);
+  if (view.__omCapGl || now - last > (inside ? 12 : Math.max(30, level * level * 4))) frame(now);
+}
+function run() { clearTimeout(away); if (view && !raf && wake()) { count(last = performance.now()); raf = requestAnimationFrame(tick); } }
+function halt() { cancelAnimationFrame(raf); raf = 0; }
+function drop(force) {
+  var l = trail[0];
+  if (!force && l && Math.hypot(l[0] - aim[0], l[1] - aim[1]) < 0.04) return;
+  trail.unshift([aim[0], aim[1], clock]);
+  trail.length = Math.min(trail.length, 12);
+}
+function point(e) {
+  aim = [e.offsetX / (view.clientWidth || 1), 1 - e.offsetY / (view.clientHeight || 1)];
+  inside = true; run();
+}
+var on = {
+  pointermove: (e) => { point(e); drop(false); },
+  pointerdown: (e) => { point(e); down = true; drop(true); },
+  pointerup: () => { down = false; },
+  pointerleave: () => { inside = false; down = false; }
+};
+var seen = new IntersectionObserver((es) => {
+  clearTimeout(away);
+  shown = es[es.length - 1].isIntersecting;
+  if (shown) run();
+  else { halt(); away = setTimeout(sleep, 1500); }
+});
+function hold(el) {
+  for (var ev in on) {
+    if (view) view.removeEventListener(ev, on[ev]);
+    if (el) el.addEventListener(ev, on[ev]);
+  }
+  seen.disconnect();
+  view = el;
+  if (el) { paint = el.getContext('2d'); seen.observe(el); } else halt();
+}
+document.addEventListener('visibilitychange', () => count(performance.now()));
+hold(logic.view.current);
+if (wake()) frame(last = performance.now());
+return {
+  update() { if (logic.view.current !== view) hold(logic.view.current); if (shown) run(); },
+  reload() { halt(); sleep(); fresh = true; if (shown) run(); },
+  stop() { halt(); clearTimeout(away); hold(null); sleep(); }
+};
+}
+var FRAG = `
+uniform float uTime;
+uniform vec2 uResolution;
+uniform vec2 uMouse;
+uniform float uScroll;
+uniform float uFill;
+uniform float uSparkle;
+uniform float uGrain;
+uniform vec3 uGround;
+uniform vec3 uBlue;
+uniform vec3 uIce;
+uniform vec3 uFlare;
+uniform vec2 uLogoRot;
+uniform vec3 uCut[12];
+uniform sampler2D uGlyphs;
+uniform float uGlyphOn;
+uniform float uRainbow;
+float hash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+vec2 grad(vec2 i) { float a = hash(i) * 6.28318; return vec2(cos(a), sin(a)); }
+float gnoise(vec2 p) {
+  vec2 i = floor(p), f = fract(p), u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
+  return mix(mix(dot(grad(i), f), dot(grad(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0)), u.x),
+             mix(dot(grad(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0)), dot(grad(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0)), u.x), u.y);
+}
+// stream pattern in flow space: long streams, smaller ridges, fine drips
+// flow runs left to right across the three slides, dipping slightly
+const vec2 DIR = vec2(0.9781, -0.2079), ACROSS = vec2(0.2079, 0.9781);
+const float FLOW = 0.04;
+float smax(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (a - b) / k, 0.0, 1.0); return mix(b, a, h) + k * h * (1.0 - h); }
+// one river of liquid: a wandering centre line and a width that swells and thins as bulges travel downstream
+float river(vec2 p, float c, float amp, float fr, float ph, float wdt, float seed) {
+  float center = c + amp * sin(p.x * fr + ph) + 0.6 * amp * sin(p.x * fr * 0.43 + ph * 1.7 + 1.0) + 0.10 * gnoise(vec2(p.x * 0.9, seed));
+  float width = wdt * (0.70 + 0.55 * gnoise(vec2(p.x * 1.1 - uTime * 0.05, seed + 3.0)));
+  return width - abs(p.y - center);
+}
+// composition: a wide main river, a narrower one below that dives and crosses it, a thin one above; they merge and part
+float base2(vec2 q) {
+  vec2 qs = q + vec2(FLOW * uTime, 0.0);
+  vec2 p = qs.x * DIR + qs.y * ACROSS;
+  float m = river(p, 0.00, 0.26, 0.80, 0.4, 0.170, 1.0);
+  m = smax(m, river(p, -0.22, 0.24, 1.10, 2.1, 0.110, 5.0), 0.05);
+  m = smax(m, river(p, 0.28, 0.20, 0.58, 4.2, 0.080, 9.0), 0.04);
+  float brk = gnoise(vec2(qs.x * 0.8 - uTime * 0.03, qs.y * 3.0));
+  return m * 3.20 + 0.20 * brk;
+}
+float base(vec2 q) { return base2(q) + 0.20 * gnoise(vec2(q.x * 2.80 - 2.0, q.y * 14.0)); }
+// cross-section of the liquid: steep sides, full top
+float body(float x) { x = clamp(x, 0.0, 1.0); float k = 1.0 - x; return 1.0 - k * k; }
+float fold(float m) { return 0.55 * m + 0.50 * (1.0 - abs(m) * 2.0); }
+// airbrushed chrome: white where it faces the light, then ice, blue, deep blue, and black once it turns away
+vec3 chrome(float a) {
+  // mirror chrome: what it reflects is a studio with sharp white strips, black gaps, a hot horizon and a dark floor
+  vec3 c = uGround * 0.05 + uBlue * 0.28 * smoothstep(-0.95, -0.15, a) * (1.0 - smoothstep(-0.06, 0.0, a));
+  vec3 sky = mix(uBlue * 0.22, uBlue * 0.80, smoothstep(0.05, 0.90, a));
+  c = mix(c, sky, smoothstep(-0.004, 0.004, a));
+  float hor = smoothstep(-0.004, 0.002, a) * (1.0 - smoothstep(0.018, 0.030, a));
+  float s1 = 0.0;
+  float s2 = smoothstep(0.30, 0.33, a) * (1.0 - smoothstep(0.45, 0.48, a));
+  float s3 = smoothstep(0.60, 0.64, a) * (1.0 - smoothstep(0.80, 0.84, a));
+  float top = smoothstep(0.86, 0.95, a) * (1.0 - smoothstep(1.12, 1.30, a));
+  sky = mix(sky, uBlue * 0.55, smoothstep(1.10, 1.40, a));
+  c = mix(c, sky, smoothstep(1.10, 1.40, a));
+  c = mix(c, uIce * 1.25, max(max(hor, s1), max(max(s2, s3), top)));
+  return c;
+}
+vec3 stars(vec2 w, float scale, float seed, float t, float dens) {
+  vec2 g = w * scale, c = floor(g), f = fract(g) - 0.5;
+  float r = hash(c + seed), r2 = hash(c + seed + 17.3);
+  f -= (vec2(r2, hash(c + seed + 5.1)) - 0.5) * 0.7;
+  float on = step(1.0 - dens, r);
+  float d = length(f) / scale;
+  float sz = mix(0.0018, 0.0050, r2 * r2);
+  vec3 tint = mix(vec3(1.0, 0.93, 0.84), vec3(1.0, 0.78, 0.50), step(0.55, r2));
+  tint = mix(tint, uFlare, step(0.82, r2));
+  tint = mix(tint, vec3(1.0, 0.62, 0.55), step(0.95, r2));
+  return tint * on * exp(-d * d / (sz * sz)) * (0.7 + 0.3 * sin(t * 2.0 + r * 40.0));
+}
+float sdBox(vec2 p, vec2 c, vec2 hs) { vec2 d = abs(p - c) - hs; return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0); }
+// one arm of the symbol on a 5 by 5 grid, mirrored left to right
+float arm(vec2 p) {
+  vec2 a = vec2(abs(p.x - 2.5), p.y);
+  float d = length(a - vec2(1.0, 0.5)) - 0.5;
+  d = min(d, length(a - vec2(0.0, 1.5)) - 0.5);
+  d = min(d, sdBox(a, vec2(0.75, 0.75), vec2(0.25)));
+  d = min(d, sdBox(a, vec2(0.25, 1.25), vec2(0.25)));
+  d = min(d, max(sdBox(a, vec2(0.5, 1.0), vec2(0.25)), max(0.25 - length(a - vec2(0.75, 1.25)), 0.25 - length(a - vec2(0.25, 0.75)))));
+  return d;
+}
+float symbol(vec2 p) {
+  vec2 a = vec2(p.x, -p.y);
+  float d = arm(a + 2.5);
+  a = vec2(-a.y, a.x); d = min(d, arm(a + 2.5));
+  a = vec2(-a.y, a.x); d = min(d, arm(a + 2.5));
+  a = vec2(-a.y, a.x); d = min(d, arm(a + 2.5));
+  return d;
+}
+// the symbol as a slab of glass with rounded edges
+float glass(vec3 p) {
+  vec2 q = vec2(symbol(p.xy) + 0.115, abs(p.z) - 0.40 + 0.115);
+  return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - 0.115;
+}
+// how much of the liquid the pointer has cut away at page point w: a groove along its recent path that narrows and closes
+float cutAt(vec2 w) {
+  float c = 0.0;
+  for (int i = 0; i < 11; i++) {
+    vec3 a = uCut[i], b = uCut[i + 1];
+    if (a.z < 0.0 || a.z > 2.6) continue;
+    bool joined = b.z >= 0.0 && b.z - a.z < 0.25;
+    vec2 pb = joined ? b.xy : a.xy;
+    vec2 pa = a.xy, ab = pb - pa, ap = w - pa;
+    float h = clamp(dot(ap, ab) / max(dot(ab, ab), 1e-6), 0.0, 1.0);
+    float d = length(ap - ab * h);
+    float age = mix(a.z, joined ? b.z : a.z, h);
+    float r = 0.105 * (1.0 - 0.40 * smoothstep(0.1, 0.9, age));
+    c = max(c, (1.0 - smoothstep(r * 0.25, r, d)) * (1.0 - smoothstep(0.5, 1.0, age)));
+  }
+  return c;
+}
+// the full visible spectrum, as white light splits through a prism: violet, blue, cyan, green, yellow, orange, red
+vec3 hot(float x) {
+  x = clamp(x, 0.0, 1.0);
+  float r = smoothstep(0.42, 0.62, x) + 0.35 * (1.0 - smoothstep(0.0, 0.14, x));
+  float g = smoothstep(0.18, 0.38, x) * (1.0 - smoothstep(0.66, 0.86, x));
+  float b = 1.0 - smoothstep(0.30, 0.48, x);
+  vec3 c = vec3(r, g, b) * (0.35 + 0.65 * smoothstep(0.0, 0.10, x)) * (0.40 + 0.60 * (1.0 - smoothstep(0.90, 1.0, x)));
+  return min(c, 1.0);
+}
+// colour light behind the glass, treated like a lab prism: the palette broken into fine, hard-edged lines
+vec3 prism(vec2 lb, float t, float sp) {
+  // narrow spectral bands with long clear gaps between them, so colour comes in touches, not floods
+  float bandX = fract(dot(lb, vec2(0.42, 0.28)) - t * 0.006);
+  float W = 0.34;
+  float bandOn = smoothstep(0.0, 0.08, bandX) * (1.0 - smoothstep(W - 0.10, W, bandX));
+  float bx = bandX / W;
+  // some passages calm, some brighter, drifting slowly
+  float swell = smoothstep(-0.35, 0.45, gnoise(vec2(lb.x * 0.45 - t * 0.02, lb.y * 0.8 + 3.0)));
+  float lines = smoothstep(0.25, 0.55, abs(fract(lb.y * 300.0) - 0.5) * 2.0);
+  float body = 0.62 + 0.38 * lines;
+  vec3 c = vec3(hot(bx + sp * 0.6).r, hot(bx).g, hot(bx - sp * 0.6).b);
+  // soften: part of the light stays white, like a real prism edge
+  c = mix(vec3(0.55), c, 0.62);
+  return c * bandOn * body * (0.25 + 0.55 * swell);
+}
+// one glyph from the atlas: 16 by 8 cells of Chinese characters and maths / code symbols
+const float GCELL = 44.0;
+float glyph(vec2 w, float t, float rate, out vec2 cell) {
+  vec2 g = w * GCELL;
+  cell = floor(g);
+  vec2 l = fract(g);
+  float tick = floor(t * rate + hash(cell + 3.7) * 9.0);
+  float id = floor(hash(cell + tick * 1.37) * 128.0);
+  vec2 uv = (vec2(mod(id, 16.0), floor(id / 16.0)) + vec2(l.x, 1.0 - l.y)) / vec2(16.0, 8.0);
+  return texture(uGlyphs, uv).a * uGlyphOn;
+}
+vec3 night(vec2 p, float t) {
+  float glow = exp(-pow((p.y + 0.05 + 0.10 * sin(p.x * 0.5)) * 2.6, 2.0));
+  vec3 warm = vec3(0.035, 0.035, 0.085) * glow;
+  return uGround + warm + stars(p, 26.0, 0.0, t, 0.11) * 0.9 + stars(p, 11.0, 31.0, t, 0.30) * 1.2 + stars(p + 3.7, 48.0, 77.0, t, 0.05) * 0.6;
+}
+vec2 flowQ(vec2 w, float t) {
+  vec2 f = vec2(dot(w, DIR), dot(w, ACROSS));
+  float zone = smoothstep(0.05, 0.55, gnoise(vec2(f.x * 0.60 + 7.0, f.y * 0.5)));
+  float kink = sin(f.x * 9.0 + 3.0 * gnoise(vec2(f.x * 1.4, f.y * 1.1)) - t * 0.08);
+  float yy = f.y + 0.20 * gnoise(vec2(f.x * 0.70 - t * 0.04, f.y * 0.3 + 2.0)) + zone * 0.105 * kink
+           + 0.045 * gnoise(vec2(f.x * 1.6 - t * 0.07, f.y * 1.3 + t * 0.008)) + 0.020 * gnoise(vec2(f.x * 3.4 - t * 0.14, f.y * 2.5 - 3.0));
+  return vec2(f.x - t * FLOW, yy);
+}
+// 1 while the pointer is actually over the liquid, 0 as soon as it leaves it or stops being there
+float hoverOn(float t) {
+  vec3 h = uCut[0];
+  if (h.z < 0.0 || h.z > 0.25) return 0.0;
+  float th = mix(0.30, -0.30, uFill);
+  return smoothstep(th - 0.06, th + 0.02, base2(flowQ(h.xy, t)));
+}
+vec3 scene(vec2 s) {
+  vec2 m = (uMouse - 0.5) * uResolution / uResolution.y;
+  float t = uTime;
+  vec2 w = s + vec2(uScroll, 0.0);
+  float near = exp(-length(s - m) * 3.0);
+  // flow space: x runs down the streams (toward lower right), y across them
+  vec2 dir = DIR, across = ACROSS;
+  vec2 f = vec2(dot(w, dir), dot(w, across));
+  // the streams wander, and in places fold into tight squiggles
+  float zone = smoothstep(0.05, 0.55, gnoise(vec2(f.x * 0.60 + 7.0, f.y * 0.5)));
+  float kink = sin(f.x * 9.0 + 3.0 * gnoise(vec2(f.x * 1.4, f.y * 1.1)) - t * 0.08);
+  float yy = f.y + 0.20 * gnoise(vec2(f.x * 0.70 - t * 0.04, f.y * 0.3 + 2.0)) + zone * 0.105 * kink
+           + 0.045 * gnoise(vec2(f.x * 1.6 - t * 0.07, f.y * 1.3 + t * 0.008)) + 0.020 * gnoise(vec2(f.x * 3.4 - t * 0.14, f.y * 2.5 - 3.0));
+  vec2 q0 = vec2(f.x - t * FLOW, yy);
+  float th = mix(0.30, -0.30, uFill);
+  // the liquid is a real solid, seen at an angle from below: rays slide across it as they come down
+  const float TALL = 0.135, WIDE = 0.70;
+  vec2 lean = vec2(0.14, 0.62);
+  vec3 ray = normalize(vec3(lean, -1.0));
+  vec2 lq = vec2(dot(lean, dir), dot(lean, across));
+  float top = TALL * 1.25, zh = 0.0;
+  bool hit = false;
+  if (max(base2(q0), base2(q0 - top * lq)) > th - 0.12) {
+    float lo = top, hi = top;
+    for (int i = 0; i <= 10; i++) {
+      float zc = top * (1.0 - float(i) / 10.0);
+      if (TALL * body((base2(q0 - zc * lq) - th) / WIDE) > zc + 1e-4) { hit = true; lo = zc; break; }
+      hi = zc;
+    }
+    if (hit) {
+      for (int i = 0; i < 4; i++) {
+        float mid = 0.5 * (lo + hi);
+        if (TALL * body((base2(q0 - mid * lq) - th) / WIDE) > mid) lo = mid; else hi = mid;
+      }
+      zh = 0.5 * (lo + hi);
+    }
+  }
+  // night behind
+  vec3 col = night(w, t);
+  if (hit) {
+    vec2 q = q0 - zh * lq;
+    float e = 0.004;
+    // folds on the surface: marbled ridges that follow the flow
+    vec2 wv = vec2(gnoise(q * vec2(0.9, 4.0) + vec2(1.7 - t * 0.05, t * 0.006)), gnoise(q * vec2(0.9, 4.0) + vec2(-3.1 - t * 0.04, -t * 0.007)));
+    vec2 mq = q * vec2(1.3, 7.5) + 2.2 * wv - vec2(t * 0.08, 0.0);
+    float m0 = gnoise(mq), mx = gnoise(mq + vec2(1.3 * e, 0.0)), my = gnoise(mq + vec2(0.0, 7.5 * e));
+    vec2 wh = w - zh * lean;
+    float z0 = TALL * body((base(q) - th) / WIDE) *  (1.0 + 0.85 * fold(m0));
+    float zx = TALL * body((base(q + vec2(e, 0.0)) - th) / WIDE) *  (1.0 + 0.85 * fold(mx));
+    float zy = TALL * body((base(q + vec2(0.0, e)) - th) / WIDE) *  (1.0 + 0.85 * fold(my));
+    vec2 gf = vec2(zx - z0, zy - z0) / e;
+    vec3 n = normalize(vec3(-1.2 * (gf.x * dir + gf.y * across), 1.0));
+    vec3 rf = reflect(ray, n);
+    // light fixed to the screen: a key light upper left, a dimmer zone lower right; slowly drifting
+    vec2 sh = s - zh * lean;
+    vec3 L = normalize(vec3(-0.42 - 0.35 * sh.x, 0.70 - 0.45 * sh.y, 0.58));
+    float key = exp(-dot(sh - vec2(-0.45 + 0.08 * sin(t * 0.05), 0.22), sh - vec2(-0.45 + 0.08 * sin(t * 0.05), 0.22)) * 1.6);
+    float a = ((dot(rf, L) - 0.36) * 2.0 + 0.34 * key + 1.80) * 0.5;
+    float b = dot(rf, normalize(vec3(0.82, 0.45, -0.36))) * 2.0 + 0.55 * sh.x - 0.25 * sh.y;
+    // clear glass, same recipe as the logo: it only bends what is behind it, no tint, no haze
+    float facing = clamp(dot(n, -ray), 0.0, 1.0);
+    float fr = 0.04 + 0.96 * pow(1.0 - facing, 6.0);
+    vec3 bent = refract(ray, n, 0.67);
+    vec2 off = (bent.xy - ray.xy) * (0.10 + 1.6 * zh);
+    float sp = 0.07 * uRainbow;
+    vec3 thru = vec3(night(w + off * (1.0 - sp), t).r, night(w + off, t).g, night(w + off * (1.0 + sp), t).b);
+    vec3 back = prism(w + off * 2.2, t, sp);
+    thru += back * (0.55 + 0.45 * smoothstep(0.0, 0.7, zh / TALL)) * uRainbow;
+    vec3 liquid = thru * (1.0 - 0.5 * fr);
+    // crisp studio lights caught on the surface, and a white edge where it turns away
+    float hl = pow(max(dot(rf, normalize(vec3(-0.45, 0.70, 0.55))), 0.0), 18.0) + 0.6 * pow(max(dot(rf, normalize(vec3(0.60, -0.30, 0.74))), 0.0), 40.0);
+    liquid += vec3(1.0, 0.95, 0.86) * (fr * 0.95 + hl * 1.1);
+    // light focused by the glass: thin, sharp caustic lines, not a haze
+    float cn = gnoise(vec2(q.x * 2.2 - t * 0.05, q.y * 9.0 + m0 * 1.5));
+    float caus = pow(clamp(1.0 - abs(cn) * 7.0, 0.0, 1.0), 3.0) * smoothstep(0.1, 0.6, zh / TALL);
+    vec3 ctint = mix(vec3(1.0, 0.95, 0.86), hot(fract(q.y * 1.5 + q.x * 0.2)), 0.65);
+    liquid += ctint * caus * 0.75;
+    // thin spectral fringe right at the turning edge
+    vec3 spec = hot(fract((1.0 - facing) * 1.6 + 0.3 * m0));
+    liquid += spec * smoothstep(0.55, 0.80, 1.0 - facing) * (1.0 - smoothstep(0.90, 0.99, 1.0 - facing)) * 0.30 * uRainbow;
+    liquid += uIce * near * 0.04;
+    // the liquid is made of symbols: faint ones always live in its thin edges,
+    // and where the pointer passes it dissolves into a digital cloud of them
+    vec2 gc; float gl = glyph(w, t, 5.0, gc);
+    float dig = cutAt(w);
+    // whole cells only, and only where the cloud is dense enough: no lone symbols on the fringe
+    float cellOn = step(0.25 + 0.75 * hash(gc + 5.1), dig);
+    vec3 gcol = mix(vec3(1.0, 0.97, 0.92), hot(fract(gc.x * 0.021 + gc.y * 0.033 + t * 0.03)), 0.55);
+    float lvl = 0.45 + 0.55 * hash(gc + floor(t * 2.0));
+    liquid = mix(liquid, liquid * 0.12 + gcol * gl * 1.30 * lvl, cellOn);
+    col = liquid;
+  }
+  // star flares caught on the liquid
+  vec3 fl = vec3(0.0);
+  for (int j = 0; j <= 1; j++) {
+    for (int i = 0; i <= 1; i++) {
+      vec2 c = floor(w * 4.5 - 0.5) + vec2(float(i), float(j));
+      float r = hash(c + 3.1), r2 = hash(c + 9.7);
+      vec2 ctr = (c + 0.5 + (vec2(r2, hash(c + 21.3)) - 0.5) * 0.8) / 4.5;
+      vec2 d = w - ctr;
+      vec2 qc = q0 + vec2(dot(-d, dir), dot(-d, across));
+      float lit = smoothstep(th - 0.05, th + 0.25, gnoise(vec2(qc.x * 0.50, qc.y * 3.3)));
+      float amp = step(0.22, r) * lit * (0.55 + 0.45 * sin(t * (1.5 + 2.0 * r2) + r * 50.0));
+      float size = mix(0.6, 1.5, r2);
+      vec2 ab = abs(d) / size;
+      float rays = exp(-ab.x * 420.0 - ab.y * 20.0) + exp(-ab.y * 420.0 - ab.x * 20.0);
+      float core = exp(-dot(ab, ab) * 30000.0);
+      float halo = exp(-length(ab) * 70.0);
+      fl += (uFlare * (rays * 1.7 + halo * 0.6) + vec3(1.0, 0.95, 0.95) * core * 2.5) * amp;
+    }
+  }
+  col += fl * uSparkle;
+  return col;
+}
+void main() {
+  vec2 s = (gl_FragCoord.xy - 0.5 * uResolution) / uResolution.y;
+  float t = uTime;
+  vec3 col;
+  // clear glass symbol on the first slide: no tint, only bent light
+  float unit = 0.08;
+  vec2 lp = (s - vec2(-uScroll, 0.0)) / unit;
+  bool drawn = false;
+  if (dot(lp, lp) < 16.0) {
+    float cx = cos(uLogoRot.x), sx = sin(uLogoRot.x), cy = cos(uLogoRot.y), sy = sin(uLogoRot.y);
+    mat3 rot = mat3(cy, 0.0, -sy, 0.0, 1.0, 0.0, sy, 0.0, cy) * mat3(1.0, 0.0, 0.0, 0.0, cx, sx, 0.0, -sx, cx);
+    vec3 ro = rot * vec3(lp, 4.0), rd = rot * vec3(0.0, 0.0, -1.0);
+    float z = 0.0, minD = 1.0;
+    bool hit = false;
+    for (int i = 0; i < 40; i++) {
+      float d = glass(ro + rd * z);
+      minD = min(minD, d);
+      if (d < 0.002) { hit = true; break; }
+      z += d * 0.9;
+      if (z > 8.0) break;
+    }
+    if (hit) {
+      vec3 p = ro + rd * z;
+      vec2 e = vec2(0.004, -0.004);
+      vec3 nl = normalize(e.xyy * glass(p + e.xyy) + e.yyx * glass(p + e.yyx) + e.yxy * glass(p + e.yxy) + e.xxx * glass(p + e.xxx) + 1e-6);
+      vec3 n = nl * rot;
+      float ndv = clamp(n.z, 0.0, 1.0);
+      vec3 bent = refract(vec3(0.0, 0.0, -1.0), n, 0.67);
+      vec2 off = bent.xy * 0.36;
+      vec3 ca = scene(s + off * 0.93), cb = scene(s + off * 1.07);
+      col = vec3(ca.r, 0.5 * (ca.g + cb.g), cb.b);
+      vec2 lw = s + vec2(uScroll, 0.0) + off * 1.6;
+      col += prism(lw, t, 0.07 * uRainbow) * uRainbow * (0.45 + 0.55 * (1.0 - ndv));
+      float fr = 0.04 + 0.96 * pow(1.0 - ndv, 4.0);
+      col += hot(fract((1.0 - ndv) * 1.4 + 0.15 * (p.x + p.y))) * smoothstep(0.35, 0.75, 1.0 - ndv) * 0.45 * uRainbow;
+      vec3 rf = reflect(vec3(0.0, 0.0, -1.0), n);
+      float key = pow(max(dot(rf, normalize(vec3(-0.45, 0.70, 0.55))), 0.0), 40.0) + 0.5 * pow(max(dot(rf, normalize(vec3(0.60, -0.30, 0.74))), 0.0), 90.0);
+      col = col * (1.0 - 0.5 * fr) + vec3(1.0, 0.95, 0.86) * (fr * 0.50 + key * 1.0);
+      drawn = true;
+    } else {
+      float edge = 1.0 - smoothstep(0.0, 2.0 / (uResolution.y * unit), minD);
+      if (edge > 0.0) { col = mix(scene(s), vec3(1.0, 0.95, 0.86), edge * 0.5); drawn = true; }
+    }
+  }
+  if (!drawn) col = scene(s);
+  // film grain: coarse, stronger in the lights
+  float lum = dot(col, vec3(0.2126, 0.7152, 0.0722));
+  float gsz = max(2.0, uResolution.y / 380.0);
+  vec2 gp = floor(gl_FragCoord.xy / gsz) + floor(t * 12.0) * vec2(19.1, 7.7);
+  float g1 = hash(gp) - 0.5, g2 = hash(floor(gl_FragCoord.xy / (gsz * 0.5)) + 13.0 + floor(t * 12.0) * 3.3) - 0.5;
+  vec3 gc = vec3(hash(gp + 41.3), hash(gp + 87.1), hash(gp + 5.9)) - 0.5;
+  col += ((g1 * 0.7 + g2 * 0.5) + gc * 0.25) * (0.16 + 0.36 * clamp(lum, 0.0, 1.0)) * uGrain;
+  outColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+}
+`;
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.view = React.createRef();
+    this.cuts = [];
+    this.scroller = React.createRef();
+    this.onWheel = (e) => {
+      const el = this.scroller.current;
+      if (el && Math.abs(e.deltaY) > Math.abs(e.deltaX)) el.scrollLeft += e.deltaY;
+    };
+    const h = this.h = { on: false, x0: 0, y0: 0, dx: 0, dy: 0, rx: 0, ry: 0, base: 0, target: 0, idle: 1, t: 0 };
+    this.logoDown = (e) => {
+      if (e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId);
+      h.on = true; h.x0 = e.clientX; h.y0 = e.clientY; h.dx = 0; h.dy = 0; h.base = h.ry; h.idle = 0;
+    };
+    this.logoMove = (e) => { if (h.on) { h.dx = e.clientX - h.x0; h.dy = e.clientY - h.y0; } };
+    this.logoUp = () => {
+      if (!h.on) return;
+      h.on = false; h.target = Math.round(h.ry / Math.PI) * Math.PI;
+    };
+    this.logoClick = (e) => { if (e.detail === 0) { h.idle = 0; h.target += Math.PI * 2; } };
+    // where the glass symbol is turned to right now: spins while held, eases back to face-on after
+    this.logoTurn = () => {
+      const now = performance.now(), dt = Math.min(0.05, (now - (h.t || now)) / 1000);
+      h.t = now;
+      if (h.on) {
+        h.base += dt * 1.9;
+        h.ry = h.base + h.dx * 0.009;
+        h.rx += (Math.max(-0.95, Math.min(0.95, h.dy * 0.006)) - h.rx) * (1 - Math.exp(-dt * 12));
+      } else {
+        const k = 1 - Math.exp(-dt * 3.5);
+        h.ry += (h.target - h.ry) * k; h.rx += (0 - h.rx) * k;
+        if (Math.abs(h.target - h.ry) < 0.02) h.idle = Math.min(1, h.idle + dt * 0.6);
+      }
+      const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // steady, slow spin from left to right, like a top: one full turn takes about 20 seconds
+      if (!calm) h.auto = ((h.auto || 0) + dt * 0.30) % (Math.PI * 2);
+      return [h.rx, h.ry + (h.auto || 0)];
+    };
+  }
+  componentDidMount() {
+    this.atlas = null;
+    this.stage = shaderStage(this, FRAG);
+    this.buildAtlas();
+    const view = this.view.current, zone = this.scroller.current;
+    if (view && zone) {
+      // listen on the whole board, so the trail keeps going behind the logo too
+      this.onCut = (e) => {
+        const r = view.getBoundingClientRect(), cw = r.width || 1, ch = r.height || 1, el = this.scroller.current;
+        const ox = e.clientX - r.left, oy = e.clientY - r.top;
+        if (ox < 0 || oy < 0 || ox > cw || oy > ch) return;
+        const x = (ox / cw - 0.5) * cw / ch + (el ? el.scrollLeft / (el.clientHeight || ch) : 0), y = 0.5 - oy / ch;
+        const now = performance.now(), last = this.cuts[0];
+        if (last && Math.hypot(last.x - x, last.y - y) < 0.012 && now - last.t < 60) return;
+        this.cuts.unshift({ x: x, y: y, t: now });
+        this.cuts.length = Math.min(this.cuts.length, 12);
+      };
+      this.onLeave = () => { this.cuts = []; };
+      zone.addEventListener('pointermove', this.onCut);
+      zone.addEventListener('pointerdown', this.onCut);
+      zone.addEventListener('pointerleave', this.onLeave);
+      this.cutZone = zone;
+    }
+  }
+  componentDidUpdate() { this.stage.update(); }
+  componentWillUnmount() {
+    const zone = this.cutZone;
+    if (zone && this.onCut) { zone.removeEventListener('pointermove', this.onCut); zone.removeEventListener('pointerdown', this.onCut); zone.removeEventListener('pointerleave', this.onLeave); }
+    this.stage.stop();
+  }
+  uniforms() {
+    const p = this.props, el = this.scroller.current;
+    return {
+      speed: p.speed ?? 1,
+      uScroll: el ? el.scrollLeft / (el.clientHeight || 1) : 0,
+      uFill: p.fill ?? 0.5,
+      uSparkle: p.sparkle ?? 1,
+      uGrain: p.grain ?? 1,
+      uGround: p.ground ?? '#0C0C10',
+      uBlue: p.metal ?? '#A3ABB5',
+      uIce: p.ice ?? '#D4E9F7',
+      uFlare: p.flare ?? '#FF3048',
+      uLogoRot: this.logoTurn(),
+      uCut: this.cutList(),
+      uGlyphOn: this.atlas ? 1 : 0,
+      uRainbow: p.rainbow ?? 1.25
+    };
+  }
+  cutList() {
+    const out = new Array(36), now = performance.now(), head = this.cuts[0];
+    if (head && now - head.t > 80 && now - head.t < 200) this.cuts.unshift({ x: head.x, y: head.y, t: now });
+    if (this.cuts.length > 12) this.cuts.length = 12;
+    for (let i = 0; i < 12; i++) {
+      const c = this.cuts[i];
+      out[i * 3] = c ? c.x : 0; out[i * 3 + 1] = c ? c.y : 0; out[i * 3 + 2] = c ? (now - c.t) / 1000 : -1;
+    }
+    return out;
+  }
+  buildAtlas() {
+    const han = '桥光流动机器人未来电子数码算法网络云能量天地星河龙道气形物理智造创新深圳苏黎世合一零九八七六五四三二十百千万亿芯片模型图像视觉运动关节力矩传感控制学习神经元维度空间时间速度信号频率波粒场';
+    const sym = '∑∫∂∞πλΔ√≈≠±×÷∇∈⊕φθΩμσ01<>{}[]/=+-*#%&∀∃⊂∪∩→↺⌘λ∮ℏℵ';
+    const glyphs = (han + sym).split('');
+    const S = 64, cols = 16, rows = 8;
+    const c = document.createElement('canvas');
+    c.width = S * cols; c.height = S * rows;
+    const draw = () => {
+      const g = c.getContext('2d');
+      g.clearRect(0, 0, c.width, c.height);
+      g.fillStyle = '#ffffff'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      for (let i = 0; i < cols * rows; i++) {
+        const ch = glyphs[i % glyphs.length], cx = (i % cols) * S + S / 2, cy = Math.floor(i / cols) * S + S / 2;
+        const isHan = ch.charCodeAt(0) > 0x2e80;
+        g.font = isHan ? '46px "ZCOOL QingKe HuangYou", "Noto Sans SC", sans-serif' : '40px "JetBrains Mono", ui-monospace, monospace';
+        g.fillText(ch, cx, cy + 2);
+      }
+      this.atlas = c;
+      if (this.stage) this.stage.reload();
+    };
+    const fonts = document.fonts;
+    if (fonts && fonts.load) {
+      Promise.all([fonts.load('46px "ZCOOL QingKe HuangYou"', '桥光'), fonts.load('40px "JetBrains Mono"', '∑01')])
+        .then(draw, draw);
+      setTimeout(() => { if (!this.atlas) draw(); }, 2500);
+    } else draw();
+  }
+  renderVals() {
+    if (this.error) throw new Error(this.error);
+    return { view: this.view, scroller: this.scroller, onWheel: this.onWheel, logoDown: this.logoDown, logoMove: this.logoMove, logoUp: this.logoUp, logoClick: this.logoClick };
+  }
+}
+
+(function () {
+  var c = new Component({"speed": 0.66, "fill": 0.65, "sparkle": 0.5, "grain": 0.46, "rainbow": 0.35, "ground": "#000000", "metal": "#000000", "ice": "#000000", "flare": "#8c8c8c66"});
+  c.view.current = document.getElementById('view');
+  c.scroller.current = document.getElementById('scroller');
+  var v = c.renderVals();
+  var sc = c.scroller.current, logo = document.getElementById('logo');
+  sc.addEventListener('wheel', function (e) { v.onWheel(e); }, { passive: true });
+  logo.addEventListener('pointerdown', v.logoDown);
+  logo.addEventListener('pointermove', v.logoMove);
+  logo.addEventListener('pointerup', v.logoUp);
+  logo.addEventListener('pointercancel', v.logoUp);
+  logo.addEventListener('click', v.logoClick);
+  c.componentDidMount();
+  window.addEventListener('resize', function () { c.componentDidUpdate(); });
+})();
+</script>
+</body>
+</html>
